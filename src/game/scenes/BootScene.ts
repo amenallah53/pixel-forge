@@ -46,6 +46,9 @@ export class BootScene extends Phaser.Scene {
     for (const { key, url } of w) this.load.image(key, url)
     for (const { key, url } of i) this.load.image(key, url)
     for (const { key, url } of j) this.load.image(key, url)
+    this.load.image('candle', '/assets/candle.png')
+    this.load.image('mirror', '/assets/mirror.png')
+    this.load.image('wooden_box', '/assets/wooden_box.png')
 
     this.add.text(400, 300, 'Loading...', {
       fontSize: '24px',

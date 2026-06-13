@@ -37,7 +37,7 @@ export class Level1Scene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.07, 0.07)
     this.cameras.main.setBackgroundColor('#1a1a2e')
 
-    this.cursors = this.input.keyboard.createCursorKeys()
+    this.cursors = this.input.keyboard!.createCursorKeys()
   }
 
   update(): void {

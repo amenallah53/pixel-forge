@@ -1,7 +1,24 @@
 import { useEffect, useRef } from 'react'
 import Phaser from 'phaser'
-import { BootScene } from './game/scenes/BootScene'
-import { Level1Scene } from './game/scenes/Level1Scene'
+import { ScientiaBootScene } from './scenes/BootScene.ts'
+import { ScientiaMenuScene } from './scenes/MenuScene.ts'
+import { Level1IntroScene } from './levels/level1/Level1IntroScene.ts'
+import { CameraObscuraScene } from './levels/level1/CameraObscuraScene.ts'
+import { ObservationScene } from './levels/level1/ObservationScene.ts'
+import { MirrorLabyrinthScene } from './levels/level1/MirrorLabyrinthScene.ts'
+import { QuizScene } from './levels/level1/QuizScene.ts'
+import { LevelCompleteScene } from './levels/level1/LevelCompleteScene.ts'
+
+const SCENES = [
+  ScientiaBootScene,
+  ScientiaMenuScene,
+  Level1IntroScene,
+  CameraObscuraScene,
+  ObservationScene,
+  MirrorLabyrinthScene,
+  QuizScene,
+  LevelCompleteScene,
+]
 
 export function Game() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -14,16 +31,8 @@ export function Game() {
       width: 800,
       height: 600,
       parent: containerRef.current,
-      pixelArt: true,
-      backgroundColor: '#1a1a2e',
-      physics: {
-        default: 'arcade',
-        arcade: {
-          gravity: { x: 0, y: 800 },
-          debug: false,
-        },
-      },
-      scene: [BootScene, Level1Scene],
+      backgroundColor: '#0a0a1a',
+      scene: SCENES,
       scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
