@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVELS } from '../../data/levels.ts'
 
 const LEVEL1 = LEVELS['level1']
@@ -172,7 +173,20 @@ export class LevelCompleteScene extends Phaser.Scene {
   }
 
   private createCompletionText(w: number, h: number): void {
-    const restoredText = this.add.text(w / 2, h * 0.15, 'Science Fragment Recovered!', {
+    const progressSystem = new ProgressSystem()
+    const levelProgress = progressSystem.getProgress('level1')
+
+    const xpText = this.add.text(w / 2, h * 0.15, `XP Score: ${levelProgress.xpScore}`, {
+      fontSize: '16px',
+      color: '#69db7c',
+      fontFamily: 'Georgia, serif',
+    })
+    xpText.setOrigin(0.5)
+    xpText.setDepth(10)
+    xpText.setAlpha(0)
+    this.tweens.add({ targets: xpText, alpha: 1, duration: 800, delay: 3000 })
+
+    const restoredText = this.add.text(w / 2, h * 0.22, 'Science Fragment Recovered!', {
       fontSize: '20px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',

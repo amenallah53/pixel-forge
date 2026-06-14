@@ -13,6 +13,12 @@ export class Level4QuizScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.progressSystem = new ProgressSystem()
+    if (!this.progressSystem.isLevelUnlocked('level4')) {
+      this.scene.start('ScientiaMenuScene')
+      return
+    }
+
     const w = this.scale.width
     const h = this.scale.height
     this.cameras.main.setBackgroundColor('#071017')
@@ -41,6 +47,11 @@ export class Level4QuizScene extends Phaser.Scene {
     const results = await this.quizSystem.startQuiz(LEVEL4_QUESTIONS)
     const correctCount = results.filter((r) => r.correct).length
     const score = Math.round((correctCount / results.length) * 100)
+
+    results.forEach((r) => {
+      if (r.correct) this.progressSystem.addXP('level4', 25)
+    })
+
     const config = LEVELS.level4
 
     this.progressSystem.addFragment('level4', config.fragment)

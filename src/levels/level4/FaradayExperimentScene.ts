@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { UIButton } from "../../ui/UIButton.ts";
+import { ProgressSystem } from "../../systems/ProgressSystem.ts";
 import type { ExperimentMetrics, ExperimentStage } from "./types.ts";
 
 type MatterImage = Phaser.Physics.Matter.Image;
@@ -86,6 +87,12 @@ export class FaradayExperimentScene extends Phaser.Scene {
   }
 
   create(): void {
+    const progressSystem = new ProgressSystem();
+    if (!progressSystem.isLevelUnlocked("level4")) {
+      this.scene.start("ScientiaMenuScene");
+      return;
+    }
+
     const w = this.scale.width;
     const h = this.scale.height;
     this.cameras.main.setBackgroundColor("#0b0d10");
@@ -804,6 +811,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
   private playDiscovery(): void {
     this.discoveryPlayed = true;
     this.stage = "restored";
+    new ProgressSystem().addXP('level4', 50);
     this.continueButton!.enabled = true;
     this.subPhase = "interact";
     this.obsPanel.setVisible(false);

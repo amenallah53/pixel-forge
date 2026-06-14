@@ -6,6 +6,7 @@ export type LevelProgress = {
   completed: boolean
   fragments: string[]
   quizScore: number
+  xpScore: number
 }
 
 export class ProgressSystem {
@@ -33,6 +34,7 @@ export class ProgressSystem {
           completed: false,
           fragments: [],
           quizScore: 0,
+          xpScore: 0,
         }
       }
     }
@@ -51,6 +53,7 @@ export class ProgressSystem {
       completed: false,
       fragments: [],
       quizScore: 0,
+      xpScore: 0,
     }
   }
 
@@ -59,6 +62,12 @@ export class ProgressSystem {
     if (!p.fragments.includes(fragment.id)) {
       p.fragments.push(fragment.id)
     }
+    this.save()
+  }
+
+  addXP(levelId: string, amount: number): void {
+    const p = this.getProgress(levelId)
+    p.xpScore += amount
     this.save()
   }
 
@@ -71,6 +80,7 @@ export class ProgressSystem {
 
   isLevelUnlocked(levelId: string): boolean {
     const idx = LEVEL_ORDER.indexOf(levelId)
+    if (idx < 0) return false
     if (idx === 0) return true
     const prev = LEVEL_ORDER[idx - 1]
     return this.progress[prev]?.completed ?? false
@@ -90,5 +100,19 @@ export class ProgressSystem {
       return LEVEL_ORDER[idx + 1]
     }
     return null
+  }
+
+  resetAll(): void {
+    this.progress = {}
+    for (const id of LEVEL_ORDER) {
+      this.progress[id] = {
+        levelId: id,
+        completed: false,
+        fragments: [],
+        quizScore: 0,
+        xpScore: 0,
+      }
+    }
+    this.save()
   }
 }

@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { DialogueSystem } from '../../systems/DialogueSystem.ts'
+import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { ThreeDWorld, type ThreeDObject } from '../../systems/ThreeDWorld.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
 import { UIButton } from '../../ui/UIButton.ts'
@@ -456,6 +457,7 @@ export class CameraObscuraScene extends Phaser.Scene {
 
   private showExperimentSuccess(): void {
     if (this.transitionLock) return
+    new ProgressSystem().addXP('level1', 50)
     this.instructionText.setText('✓ Experiment complete! Watch the light rays...')
     this.updateStepIndicator(2)
 

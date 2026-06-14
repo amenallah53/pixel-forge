@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { UIButton } from '../ui/UIButton.ts'
+import { ProgressSystem } from '../systems/ProgressSystem.ts'
 
 export class ScientiaMenuScene extends Phaser.Scene {
   constructor() {
@@ -9,6 +10,8 @@ export class ScientiaMenuScene extends Phaser.Scene {
   create(): void {
     const w = this.scale.width
     const h = this.scale.height
+    const progressSystem = new ProgressSystem()
+    const level4Unlocked = progressSystem.isLevelUnlocked('level4')
 
     this.cameras.main.setBackgroundColor('#0a0a1a')
 
@@ -72,12 +75,34 @@ export class ScientiaMenuScene extends Phaser.Scene {
       })
     })
 
-    new UIButton(this, w / 2, 365, 300, 46, 'Level 4: Invisible Energy', 0x123225, 0x1f6349, () => {
-      this.cameras.main.fadeOut(600, 0, 0, 0)
-      this.cameras.main.once('camerafadeoutcomplete', () => {
-        this.scene.start('Level4IntroScene')
-      })
-    })
+    const level4Button = new UIButton(
+      this,
+      w / 2,
+      365,
+      300,
+      46,
+      level4Unlocked ? 'Level 4: Invisible Energy' : 'Level 4: Invisible Energy [LOCKED]',
+      0x123225,
+      0x1f6349,
+      () => {
+        if (!level4Unlocked) {
+          return
+        }
+        this.cameras.main.fadeOut(600, 0, 0, 0)
+        this.cameras.main.once('camerafadeoutcomplete', () => {
+          this.scene.start('Level4IntroScene')
+        })
+      },
+    )
+    level4Button.enabled = level4Unlocked
+
+    if (!level4Unlocked) {
+      this.add.text(w / 2, 416, 'Complete Level 1 to unlock this mission.', {
+        fontSize: '12px',
+        color: '#8a7f6e',
+        fontFamily: 'Georgia, serif',
+      }).setOrigin(0.5)
+    }
 
     const particleBg = this.add.particles(w / 2, 0, 'particle', {
       x: { min: -w / 2, max: w / 2 },
@@ -105,7 +130,7 @@ export class ScientiaMenuScene extends Phaser.Scene {
     const dotLabels = ['1015', '1666', '1774', '1831', '????']
     for (let i = 0; i < dotMarkers.length; i++) {
       const dx = 40 + (w - 80) * dotMarkers[i]
-      const playable = i === 0 || i === 3
+      const playable = i === 0 || (i === 3 && level4Unlocked)
       timeline.fillStyle(playable ? 0xffd700 : 0x4a3728, playable ? 1 : 0.5)
       timeline.fillCircle(dx, 400, playable ? 5 : 3)
 

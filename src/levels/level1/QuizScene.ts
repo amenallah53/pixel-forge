@@ -51,9 +51,13 @@ export class QuizScene extends Phaser.Scene {
     const correctCount = results.filter((r) => r.correct).length
     const score = Math.round((correctCount / results.length) * 100)
 
+    results.forEach((r) => {
+      if (r.correct) this.progressSystem.addXP('level1', 25)
+    })
+
     const config = LEVELS['level1']
     this.progressSystem.addFragment('level1', config.fragment)
-    this.progressSystem.completeLevel('level1', score)
+    this.progressSystem.completeLevel('level1', score) 
 
     this.cameras.main.fadeOut(800, 0, 0, 0)
     this.cameras.main.once('camerafadeoutcomplete', () => {

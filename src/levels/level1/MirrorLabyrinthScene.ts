@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { DialogueSystem } from '../../systems/DialogueSystem.ts'
+import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { ThreeDWorld } from '../../systems/ThreeDWorld.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
 import { UIButton } from '../../ui/UIButton.ts'
@@ -441,6 +442,7 @@ export class MirrorLabyrinthScene extends Phaser.Scene {
   private onPuzzleSolved(): void {
     if (this.solved) return
     this.solved = true; this.puzzleSolved = true
+    new ProgressSystem().addXP('level1', 50)
 
     this.beamG.clear(); this.glowG.clear(); this.ghostG.clear()
     this.hintText.setText('BEAM CAPTURED! Light reflects at equal angles.')

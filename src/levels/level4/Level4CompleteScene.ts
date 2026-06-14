@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { UIButton } from '../../ui/UIButton.ts'
+import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVELS } from '../../data/levels.ts'
 
 const LEVEL4 = LEVELS.level4
@@ -10,6 +11,12 @@ export class Level4CompleteScene extends Phaser.Scene {
   }
 
   create(): void {
+    const progressSystem = new ProgressSystem()
+    if (!progressSystem.isLevelUnlocked('level4')) {
+      this.scene.start('ScientiaMenuScene')
+      return
+    }
+
     const w = this.scale.width
     const h = this.scale.height
     this.cameras.main.setBackgroundColor('#05080d')
@@ -32,15 +39,15 @@ export class Level4CompleteScene extends Phaser.Scene {
       fontStyle: 'italic',
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, h - 116, 'Electricity can be generated when a magnetic field changes relative to a conductor.', {
-      fontSize: '13px',
-      color: '#e4fbff',
+    const levelProgress = progressSystem.getProgress('level4')
+
+    this.add.text(w / 2, h - 116, `XP Score: ${levelProgress.xpScore}`, {
+      fontSize: '16px',
+      color: '#69db7c',
       fontFamily: 'Georgia, serif',
-      wordWrap: { width: 620 },
-      align: 'center',
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, h - 88, 'Next timeline mission unlocked.', {
+    this.add.text(w / 2, h - 90, 'Next timeline mission unlocked.', {
       fontSize: '12px',
       color: '#f0dfb8',
       fontFamily: 'Georgia, serif',

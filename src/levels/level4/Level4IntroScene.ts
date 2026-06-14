@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { DialogueSystem } from '../../systems/DialogueSystem.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
+import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 
 export class Level4IntroScene extends Phaser.Scene {
   private dialogueSystem!: DialogueSystem
@@ -10,6 +11,12 @@ export class Level4IntroScene extends Phaser.Scene {
   }
 
   create(): void {
+    const progressSystem = new ProgressSystem()
+    if (!progressSystem.isLevelUnlocked('level4')) {
+      this.scene.start('ScientiaMenuScene')
+      return
+    }
+
     const w = this.scale.width
     const h = this.scale.height
     this.cameras.main.setBackgroundColor('#05080d')
