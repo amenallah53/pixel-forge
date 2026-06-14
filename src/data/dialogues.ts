@@ -94,4 +94,26 @@ export const DIALOGUES: Record<string, DialogueSequence> = {
     ],
     onComplete: 'QuizScene',
   },
+  level4_intro: {
+    id: 'level4_intro',
+    lines: [
+      {
+        speaker: 'Narrator',
+        text: 'The timeline tears open in 1831. An industrial city goes dark all at once.',
+      },
+      {
+        speaker: 'Narrator',
+        text: 'Streetlights fail. Factories fall silent. Hospitals flicker on the edge of darkness.',
+      },
+      {
+        speaker: 'Michael Faraday',
+        text: 'A principle has vanished from history. Electricity is not created from nothing.',
+      },
+      {
+        speaker: 'Michael Faraday',
+        text: 'We must discover how motion and magnetism work together.',
+      },
+    ],
+    onComplete: 'FaradayExperimentScene',
+  },
 }

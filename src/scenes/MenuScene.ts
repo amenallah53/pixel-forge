@@ -58,17 +58,24 @@ export class ScientiaMenuScene extends Phaser.Scene {
     subtitleBox.fillStyle(0x000000, 0.4)
     subtitleBox.fillRoundedRect(w / 2 - 250, 220, 500, 40, 8)
 
-    const subtitle = this.add.text(w / 2, 240, 'Level 1: Ibn al-Haytham — The Secret of Light', {
+    const subtitle = this.add.text(w / 2, 240, 'Choose a recovered timeline mission', {
       fontSize: '14px',
       color: '#8a7f6e',
       fontFamily: 'Georgia, serif',
     })
     subtitle.setOrigin(0.5)
 
-    new UIButton(this, w / 2, 320, 240, 50, '▶ BEGIN EXPERIMENT', 0x2a1a0a, 0x4a3728, () => {
+    new UIButton(this, w / 2, 305, 300, 46, 'Level 1: Secret of Light', 0x2a1a0a, 0x4a3728, () => {
       this.cameras.main.fadeOut(600, 0, 0, 0)
       this.cameras.main.once('camerafadeoutcomplete', () => {
         this.scene.start('Level1IntroScene')
+      })
+    })
+
+    new UIButton(this, w / 2, 365, 300, 46, 'Level 4: Invisible Energy', 0x123225, 0x1f6349, () => {
+      this.cameras.main.fadeOut(600, 0, 0, 0)
+      this.cameras.main.once('camerafadeoutcomplete', () => {
+        this.scene.start('Level4IntroScene')
       })
     })
 
@@ -98,12 +105,13 @@ export class ScientiaMenuScene extends Phaser.Scene {
     const dotLabels = ['1015', '1666', '1774', '1831', '????']
     for (let i = 0; i < dotMarkers.length; i++) {
       const dx = 40 + (w - 80) * dotMarkers[i]
-      timeline.fillStyle(i === 0 ? 0xffd700 : 0x4a3728, i === 0 ? 1 : 0.5)
-      timeline.fillCircle(dx, 400, i === 0 ? 5 : 3)
+      const playable = i === 0 || i === 3
+      timeline.fillStyle(playable ? 0xffd700 : 0x4a3728, playable ? 1 : 0.5)
+      timeline.fillCircle(dx, 400, playable ? 5 : 3)
 
       const label = this.add.text(dx, 415, dotLabels[i], {
         fontSize: '9px',
-        color: i === 0 ? '#ffd700' : '#4a3728',
+        color: playable ? '#ffd700' : '#4a3728',
         fontFamily: 'Georgia, serif',
       })
       label.setOrigin(0.5, 0)
