@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { t } from '../i18n/index.ts'
 
 export class ScientiaBootScene extends Phaser.Scene {
   constructor() {
@@ -19,7 +20,7 @@ export class ScientiaBootScene extends Phaser.Scene {
       this.load.image(key, url)
     }
 
-    const bg = this.add.text(this.scale.width / 2, this.scale.height / 2, 'Loading...', {
+    const bg = this.add.text(this.scale.width / 2, this.scale.height / 2, t('boot.loading'), {
       fontSize: '20px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',

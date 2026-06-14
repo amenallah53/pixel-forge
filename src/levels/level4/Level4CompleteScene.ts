@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { UIButton } from '../../ui/UIButton.ts'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVELS } from '../../data/levels.ts'
+import { t } from '../../i18n/index.ts'
 
 const LEVEL4 = LEVELS.level4
 
@@ -26,7 +27,7 @@ export class Level4CompleteScene extends Phaser.Scene {
     this.createFragment(w, h)
     this.createTimeline(w)
 
-    this.add.text(w / 2, 38, 'Science Fragment Recovered:', {
+    this.add.text(w / 2, 38, t('level4complete.fragment'), {
       fontSize: '18px',
       color: '#f4d38a',
       fontFamily: 'Georgia, serif',
@@ -41,19 +42,19 @@ export class Level4CompleteScene extends Phaser.Scene {
 
     const levelProgress = progressSystem.getProgress('level4')
 
-    this.add.text(w / 2, h - 116, `XP Score: ${levelProgress.xpScore}`, {
+    this.add.text(w / 2, h - 116, `${t('level4complete.xp')} ${levelProgress.xpScore}`, {
       fontSize: '16px',
       color: '#69db7c',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, h - 90, 'Next timeline mission unlocked.', {
+    this.add.text(w / 2, h - 90, t('level4complete.unlocked'), {
       fontSize: '12px',
       color: '#f0dfb8',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
 
-    new UIButton(this, w / 2, h - 48, 180, 34, 'Return to Timeline', 0x123225, 0x1f6349, () => {
+    new UIButton(this, w / 2, h - 48, 180, 34, t('level4complete.return'), 0x123225, 0x1f6349, () => {
       this.cameras.main.fadeOut(500, 0, 0, 0)
       this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('ScientiaMenuScene'))
     })
@@ -132,7 +133,7 @@ export class Level4CompleteScene extends Phaser.Scene {
     const g = this.add.graphics()
     g.lineStyle(2, 0x38556a, 0.65)
     g.lineBetween(80, y, w - 80, y)
-    const eras = ['1015', '1666', '1774', '1831', '????']
+    const eras = [t('timeline.1015'), t('timeline.1666'), t('timeline.1774'), t('timeline.1831'), t('timeline.future')]
     for (let i = 0; i < eras.length; i++) {
       const x = 80 + (w - 160) * (i / (eras.length - 1))
       const active = i <= 3

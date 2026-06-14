@@ -3,6 +3,7 @@ import { QuizSystem } from '../../systems/QuizSystem.ts'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVEL1_QUESTIONS } from '../../data/questions.ts'
 import { LEVELS } from '../../data/levels.ts'
+import { t } from '../../i18n/index.ts'
 
 export class QuizScene extends Phaser.Scene {
   private quizSystem!: QuizSystem
@@ -30,7 +31,7 @@ export class QuizScene extends Phaser.Scene {
     header.fillRoundedRect(w / 2 - 200, 15, 400, 40, 8)
     header.lineStyle(1, 0xffd700, 0.5)
 
-    const title = this.add.text(w / 2, 35, 'Knowledge Assessment', {
+    const title = this.add.text(w / 2, 35, t('quiz.title'), {
       fontSize: '16px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',

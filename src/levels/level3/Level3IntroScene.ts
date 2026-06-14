@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { DialogueSystem } from '../../systems/DialogueSystem.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
+import { t } from '../../i18n/index.ts'
 
 export class Level3IntroScene extends Phaser.Scene {
   private dialogueSystem!: DialogueSystem
@@ -72,14 +73,14 @@ export class Level3IntroScene extends Phaser.Scene {
     g.lineBetween(w * 0.34, h * 0.44, w * 0.63, h * 0.44)
     g.lineBetween(w * 0.34, h * 0.48, w * 0.63, h * 0.48)
 
-    this.add.text(w / 2, h * 0.18, 'Lavoisier and the Lost Perfume Formula', {
+    this.add.text(w / 2, h * 0.18, t('level3.introSubtitle'), {
       fontSize: '24px',
       color: '#f2c86f',
       fontFamily: 'Georgia, serif',
       fontStyle: 'italic',
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, h * 0.24, 'A simple distillation experiment will recover the perfume.', {
+    this.add.text(w / 2, h * 0.24, t('level3.introDesc'), {
       fontSize: '12px',
       color: '#e8d9be',
       fontFamily: 'Georgia, serif',
@@ -87,7 +88,7 @@ export class Level3IntroScene extends Phaser.Scene {
   }
 
   private createTitle(w: number): void {
-    this.add.text(w / 2, 38, 'LEVEL 3', {
+    this.add.text(w / 2, 38, t('level3.introTitle'), {
       fontSize: '13px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',

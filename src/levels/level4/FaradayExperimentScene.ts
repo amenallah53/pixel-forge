@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { UIButton } from "../../ui/UIButton.ts";
 import { ProgressSystem } from "../../systems/ProgressSystem.ts";
 import type { ExperimentMetrics, ExperimentStage } from "./types.ts";
+import { t } from "../../i18n/index.ts";
 
 type MatterImage = Phaser.Physics.Matter.Image;
 
@@ -119,7 +120,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     this.updatePhaseLabel("Expérience interactive");
     this.stepCounter.setText("Step 1 / 5");
     this.instructionText.setText(
-      "Drag the magnet close to the coil and hold it still. Observe the galvanometer.",
+      `${t('faraday.instruction')} Observe the galvanometer.`,
     );
 
     this.input.on("pointerdown", () => {
@@ -177,7 +178,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     }
 
     this.add
-      .text(w / 2, 16, "Faraday: Electromagnetic Induction", {
+      .text(w / 2, 16, t('faraday.title'), {
         fontSize: "17px",
         color: "#f4d38a",
         fontFamily: "Georgia, serif",
@@ -287,7 +288,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
       this.coilGraphic.strokeEllipse(x - 1, 302, 28, 76);
     }
     this.add
-      .text(407, 238, "Copper coil", {
+      .text(407, 238, t('faraday.coil'), {
         fontSize: "10px",
         color: "#cfae82",
         fontFamily: "Georgia, serif",
@@ -313,21 +314,21 @@ export class FaradayExperimentScene extends Phaser.Scene {
     g.lineBetween(613 - 35, 319, 613 + 35, 319);
 
     this.add
-      .text(578, 325, "-", {
+      .text(578, 325, t('faraday.negative'), {
         fontSize: "11px",
         color: "#ff9999",
         fontFamily: "Georgia, serif",
       })
       .setOrigin(0.5);
     this.add
-      .text(648, 325, "+", {
+      .text(648, 325, t('faraday.positive'), {
         fontSize: "11px",
         color: "#99ff99",
         fontFamily: "Georgia, serif",
       })
       .setOrigin(0.5);
     this.add
-      .text(613, 332, "Galvanometer", {
+      .text(613, 332, t('faraday.galvanometer'), {
         fontSize: "10px",
         color: "#e8d4a8",
         fontFamily: "Georgia, serif",
@@ -360,7 +361,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
       render: { visible: false },
     });
     this.add
-      .text(165, 250, "Magnet", {
+      .text(165, 250, t('faraday.magnet'), {
         fontSize: "10px",
         color: "#d7e7ff",
         fontFamily: "Georgia, serif",
@@ -372,7 +373,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     const y = h - 156;
     const bg = this.add.rectangle(w / 2, y + 24, 500, 52, 0x081219, 0.92);
     bg.setStrokeStyle(1, 0x55d6ff, 0.3);
-    const label = this.add.text(w / 2 - 240, y + 8, "Observation", {
+    const label = this.add.text(w / 2 - 240, y + 8, t('faraday.observation'), {
       fontSize: "11px",
       color: "#55d6ff",
       fontFamily: "Georgia, serif",
@@ -396,7 +397,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     const y = h - 156;
     const bg = this.add.rectangle(w / 2, y + 24, 500, 52, 0x141008, 0.92);
     bg.setStrokeStyle(1, 0xf4d38a, 0.3);
-    const label = this.add.text(w / 2 - 240, y + 8, "Explication", {
+    const label = this.add.text(w / 2 - 240, y + 8, t('faraday.explication'), {
       fontSize: "11px",
       color: "#f4d38a",
       fontFamily: "Georgia, serif",
@@ -448,7 +449,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     );
 
     this.coreToggle = this.add
-      .text(w - 206, 180, "[ Insert iron core ]", {
+      .text(w - 206, 180, t('faraday.coreInsert'), {
         fontSize: "12px",
         color: "#9fcfe0",
         fontFamily: "Georgia, serif",
@@ -456,10 +457,10 @@ export class FaradayExperimentScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
     this.coreToggle.on("pointerdown", () => this.toggleCore());
 
-    new UIButton(this, 90, 165, 120, 30, "Hint", 0x2a1a0a, 0x4a3728, () =>
+    new UIButton(this, 90, 165, 120, 30, t('faraday.hint'), 0x2a1a0a, 0x4a3728, () =>
       this.showHint(),
     );
-    new UIButton(this, 230, 165, 160, 30, "Restart", 0x2a1a0a, 0x4a3728, () =>
+    new UIButton(this, 230, 165, 160, 30, t('faraday.restart'), 0x2a1a0a, 0x4a3728, () =>
       this.scene.restart(),
     );
 
@@ -469,7 +470,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
       h - 52,
       185,
       36,
-      "Take the Quiz",
+      t('faraday.quiz'),
       0x123225,
       0x1f6349,
       () => {
@@ -488,7 +489,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     const label = this.add.text(
       w - 185,
       211,
-      "Accessibility: high contrast sparks",
+       t('faraday.accessibility'),
       {
         fontSize: "9px",
         color: "#d6d6d6",
@@ -496,7 +497,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
       },
     );
     const toggle = this.add
-      .text(w - 185, 229, "[ Toggle field lines ]", {
+      .text(w - 185, 229, t('faraday.toggleFields'), {
         fontSize: "10px",
         color: "#55d6ff",
         fontFamily: "Georgia, serif",
@@ -681,7 +682,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     this.subPhase = "observe";
     this.subTimer = 3.5;
     this.clickToAdvance = false;
-    this.updatePhaseLabel("Observation");
+    this.updatePhaseLabel(t('faraday.observation'));
   }
 
   private showExplanation(): void {
@@ -691,7 +692,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
     this.subPhase = "explain";
     this.subTimer = 4.0;
     this.clickToAdvance = false;
-    this.updatePhaseLabel("Explication");
+    this.updatePhaseLabel(t('faraday.explication'));
   }
 
   private advanceToNextStep(): void {
@@ -703,10 +704,10 @@ export class FaradayExperimentScene extends Phaser.Scene {
       this.stage = "step5_optimization";
       this.step = 5;
       this.subPhase = "interact";
-      this.updatePhaseLabel("Défi");
-      this.stepCounter.setText("Défi — Maximisez le courant!");
+      this.updatePhaseLabel(t('faraday.challenge'));
+      this.stepCounter.setText(t('faraday.challenge'));
       this.instructionText.setText(
-        "Generate enough current to power the city! Move the magnet faster, add coil turns, and insert the iron core.",
+        t('faraday.challengeDesc'),
       );
       this.updateStepUI();
       return;
@@ -719,9 +720,9 @@ export class FaradayExperimentScene extends Phaser.Scene {
     this.updateStepUI();
 
     const instructions: Record<number, string> = {
-      2: "Now push the magnet rapidly through the coil.",
-      3: "Stop the magnet inside the coil and hold it still.",
-      4: "Pull the magnet back out of the coil.",
+      2: t('faraday.push'),
+      3: t('faraday.stop'),
+      4: t('faraday.pull'),
     };
     this.instructionText.setText(instructions[this.step] ?? "");
 
@@ -788,8 +789,8 @@ export class FaradayExperimentScene extends Phaser.Scene {
     this.ironCore.setVisible(this.metrics.ironCoreInserted);
     this.coreToggle.setText(
       this.metrics.ironCoreInserted
-        ? "[ Remove iron core ]"
-        : "[ Insert iron core ]",
+        ? t('faraday.coreRemove')
+        : t('faraday.coreInsert'),
     );
   }
 
@@ -816,13 +817,13 @@ export class FaradayExperimentScene extends Phaser.Scene {
     this.subPhase = "interact";
     this.obsPanel.setVisible(false);
     this.explPanel.setVisible(false);
-    this.updatePhaseLabel("Fragment de science récupéré");
+    this.updatePhaseLabel(t('faraday.fragment'));
     this.instructionText.setText(
-      "Electromagnetic Induction Restored! You have rediscovered how motion and magnetism create electricity.",
+      t('faraday.restored'),
     );
     this.stepCounter.setText("");
     this.faradayText.setText(
-      'Faraday: "Motion and magnetism can awaken electricity. The principle is restored!"',
+      t('faraday.quote'),
     );
     this.updateStepUI();
 

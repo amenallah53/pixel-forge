@@ -5,14 +5,14 @@ import { FARADAY_FRAGMENT } from "../levels/level4/types.ts";
 export const LEVELS: Record<string, LevelConfig> = {
   level1: {
     id: "level1",
-    title: "Ibn al-Haytham – The Secret of Light",
-    scientist: "Ibn al-Haytham",
-    era: "11th Century Cairo",
+    title: "level1.title",
+    scientist: "level1.scientist",
+    era: "level1.era",
     portraitKey: "ibn_haytham",
     fragment: {
       id: "optics",
-      name: "OPTICS",
-      description: "The science of light and vision",
+      name: "fragment.optics",
+      description: "fragment.optics",
       color: 0xffd700,
     },
     scenes: [
@@ -26,9 +26,9 @@ export const LEVELS: Record<string, LevelConfig> = {
   },
   level3: {
     id: "level3",
-    title: "Antoine Lavoisier - The Lost Perfume Formula",
-    scientist: "Antoine Lavoisier",
-    era: "1774 Paris",
+    title: "level3.title",
+    scientist: "level3.scientist",
+    era: "level3.era",
     portraitKey: "lavoisier",
     fragment: DISTILLATION_FRAGMENT,
     scenes: [
@@ -38,9 +38,9 @@ export const LEVELS: Record<string, LevelConfig> = {
   },
   level4: {
     id: "level4",
-    title: "Michael Faraday - The Invisible Energy",
-    scientist: "Michael Faraday",
-    era: "1831 London",
+    title: "level4.title",
+    scientist: "level4.scientist",
+    era: "level4.era",
     portraitKey: "faraday",
     fragment: FARADAY_FRAGMENT,
     scenes: [

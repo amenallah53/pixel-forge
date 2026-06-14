@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { UIButton } from '../../ui/UIButton.ts'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVELS } from '../../data/levels.ts'
+import { t } from '../../i18n/index.ts'
 
 type Bubble = {
   x: number
@@ -120,14 +121,14 @@ export class DistillationScene extends Phaser.Scene {
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
 
-    this.add.text(w / 2, 50, 'HEAT -> VAPOR -> COOLING -> LIQUID', {
+    this.add.text(w / 2, 50, t('level3.flowLabel'), {
       fontSize: '12px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',
       letterSpacing: 1,
     }).setOrigin(0.5)
 
-    this.instructionText = this.add.text(w / 2, 74, 'Use the heat slider to keep the flask in the optimal range.', {
+    this.instructionText = this.add.text(w / 2, 74, t('level3.sliderHint'), {
       fontSize: '12px',
       color: '#e8d9be',
       fontFamily: 'Georgia, serif',
@@ -188,32 +189,32 @@ export class DistillationScene extends Phaser.Scene {
     this.apparatusG.fillStyle(0xfff1a8, 0.55)
     this.apparatusG.fillTriangle(flaskX - 8, h - 112, flaskX, h - 136, flaskX + 8, h - 112)
 
-    this.add.text(flaskX, flaskY - 82, 'Heated flask', {
+    this.add.text(flaskX, flaskY - 82, t('level3.flask'), {
       fontSize: '10px',
       color: '#cfae82',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
 
-    this.add.text((tubeStartX + tubeEndX) / 2, tubeY - 26, 'Vapor tube / condenser', {
+    this.add.text((tubeStartX + tubeEndX) / 2, tubeY - 26, t('level3.condenser'), {
       fontSize: '10px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
 
-    this.add.text(receiverX, receiverY - 98, 'Receiving container', {
+    this.add.text(receiverX, receiverY - 98, t('level3.receiver'), {
       fontSize: '10px',
       color: '#cfae82',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
 
-    this.add.text(flaskX + 108, flaskY + 108, 'Heat the mixture carefully', {
+    this.add.text(flaskX + 108, flaskY + 108, t('level3.heatInstruction'), {
       fontSize: '11px',
       color: '#e8d9be',
       fontFamily: 'Georgia, serif',
       fontStyle: 'italic',
     }).setOrigin(0.5)
 
-    this.add.text(120, 160, 'This setup is already assembled.', {
+    this.add.text(120, 160, t('level3.assembled'), {
       fontSize: '12px',
       color: '#f2c86f',
       fontFamily: 'Georgia, serif',
@@ -281,7 +282,7 @@ export class DistillationScene extends Phaser.Scene {
       }).setOrigin(0.5, 0)
     }
 
-    this.add.text(trackX - 86, trackY - 9, 'Heat Slider', {
+    this.add.text(trackX - 86, trackY - 9, t('level3.slider'), {
       fontSize: '12px',
       color: '#f2c86f',
       fontFamily: 'Georgia, serif',
@@ -490,16 +491,16 @@ export class DistillationScene extends Phaser.Scene {
     }
 
     if (this.heat < 40) {
-      this.statusText.setText('Not enough heat. Nothing happens.')
-      this.warningText.setText('Raise the heat into the optimal zone.')
+      this.statusText.setText(t('level3.tooCold'))
+      this.warningText.setText(t('level3.tooColdHint'))
       this.warningText.setColor('#f5d0a9')
     } else if (this.heat <= 80) {
-      this.statusText.setText('Good distillation. Vapor rises, cools, and collects as liquid perfume.')
-      this.warningText.setText('Keep it steady here until the container fills.')
+      this.statusText.setText(t('level3.perfect'))
+      this.warningText.setText(t('level3.perfectHint'))
       this.warningText.setColor('#9fcfe0')
     } else {
-      this.statusText.setText('Too much heat. The perfume becomes contaminated.')
-      this.warningText.setText('Reduce heat before the purity drops too far.')
+      this.statusText.setText(t('level3.tooHot'))
+      this.warningText.setText(t('level3.tooHotHint'))
       this.warningText.setColor('#ff9f1c')
     }
   }
@@ -532,14 +533,14 @@ export class DistillationScene extends Phaser.Scene {
     panel.lineStyle(2, 0xf2c86f, 0.55)
     panel.strokeRoundedRect(w / 2 - 260, h / 2 - 145, 520, 290, 18)
 
-    const title = this.add.text(w / 2, h / 2 - 110, 'Perfume Recovered!', {
+    const title = this.add.text(w / 2, h / 2 - 110, t('level3.recovered'), {
       fontSize: '24px',
       color: '#f2c86f',
       fontFamily: 'Georgia, serif',
       fontStyle: 'italic',
     }).setOrigin(0.5)
 
-    const scoreText = this.add.text(w / 2, h / 2 - 82, `Final purity score: ${score}%`, {
+    const scoreText = this.add.text(w / 2, h / 2 - 82, `${t('level3.purity')} ${score}%`, {
       fontSize: '13px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',
@@ -548,7 +549,7 @@ export class DistillationScene extends Phaser.Scene {
     const explanation = this.add.text(
       w / 2,
       h / 2 - 38,
-      'Distillation separates liquids using differences in boiling temperatures.\nHeating produces vapor.\nCooling turns vapor back into liquid.\nThis allows valuable substances to be separated and collected.',
+      t('level3.explanation'),
       {
         fontSize: '13px',
         color: '#e8d9be',
@@ -559,7 +560,7 @@ export class DistillationScene extends Phaser.Scene {
       },
     ).setOrigin(0.5)
 
-    const note = this.add.text(w / 2, h / 2 + 70, 'Heat -> Vapor -> Cooling -> Liquid', {
+    const note = this.add.text(w / 2, h / 2 + 70, t('level3.flow'), {
       fontSize: '12px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',
@@ -571,7 +572,7 @@ export class DistillationScene extends Phaser.Scene {
       h / 2 + 108,
       190,
       34,
-      'Return to Timeline',
+      t('level3.returnTimeline'),
       0x2a1a0a,
       0x4a3728,
       () => {
@@ -586,7 +587,7 @@ export class DistillationScene extends Phaser.Scene {
       h / 2 + 108,
       190,
       34,
-      nextUnlocked ? 'Continue to Level 4' : 'Return to Timeline',
+      nextUnlocked ? t('level3.continueLevel4') : t('level3.returnTimeline'),
       0x123225,
       0x1f6349,
       () => {

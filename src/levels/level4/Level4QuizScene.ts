@@ -3,6 +3,7 @@ import { QuizSystem } from '../../systems/QuizSystem.ts'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVEL4_QUESTIONS } from '../../data/questions.ts'
 import { LEVELS } from '../../data/levels.ts'
+import { t } from '../../i18n/index.ts'
 
 export class Level4QuizScene extends Phaser.Scene {
   private quizSystem!: QuizSystem
@@ -32,7 +33,7 @@ export class Level4QuizScene extends Phaser.Scene {
       g.fillCircle(Math.random() * w, Math.random() * h, 0.6 + Math.random() * 1.6)
     }
 
-    this.add.text(w / 2, 42, 'Knowledge Validation', {
+    this.add.text(w / 2, 42, t('quiz.title4'), {
       fontSize: '20px',
       color: '#f4d38a',
       fontFamily: 'Georgia, serif',

@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { DialogueSystem } from '../../systems/DialogueSystem.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
+import { t } from '../../i18n/index.ts'
 
 export class Level4IntroScene extends Phaser.Scene {
   private dialogueSystem!: DialogueSystem
@@ -76,7 +77,7 @@ export class Level4IntroScene extends Phaser.Scene {
   }
 
   private createTitle(w: number): void {
-    const title = this.add.text(w / 2, 46, 'Michael Faraday - The Invisible Energy', {
+    const title = this.add.text(w / 2, 46, t('level4.introTitle'), {
       fontSize: '24px',
       color: '#f4d38a',
       fontFamily: 'Georgia, serif',
@@ -84,7 +85,7 @@ export class Level4IntroScene extends Phaser.Scene {
     })
     title.setOrigin(0.5)
 
-    this.add.text(w / 2, 78, '1831: electricity has vanished from the industrial city', {
+    this.add.text(w / 2, 78, t('level4.introDesc'), {
       fontSize: '12px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',

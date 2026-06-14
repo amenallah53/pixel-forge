@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import { DialogueSystem } from '../../systems/DialogueSystem.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
 import { UIButton } from '../../ui/UIButton.ts'
+import { t } from '../../i18n/index.ts'
 
 export class ObservationScene extends Phaser.Scene {
   private dialogueSystem!: DialogueSystem
@@ -24,7 +25,7 @@ export class ObservationScene extends Phaser.Scene {
     bgImage.setAlpha(0.1)
     bgImage.setDepth(0)
 
-    const title = this.add.text(w / 2, 30, 'How Does Vision Work?', {
+    const title = this.add.text(w / 2, 30, t('observation.title'), {
       fontSize: '22px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',
@@ -49,7 +50,7 @@ export class ObservationScene extends Phaser.Scene {
     const objectG = this.add.image(objectX, baseY, 'candle')
     objectG.setScale(1.5)
     objectG.setDepth(5)
-    const objectLabel = this.add.text(objectX, baseY + 60, 'Object\n(Candle)', {
+    const objectLabel = this.add.text(objectX, baseY + 60, t('observation.object'), {
       fontSize: '11px',
       color: '#88ccff',
       align: 'center',
@@ -65,7 +66,7 @@ export class ObservationScene extends Phaser.Scene {
     eyeG.fillCircle(eyeX, baseY, 8)
     eyeG.fillStyle(0xffffff, 0.3)
     eyeG.fillCircle(eyeX - 3, baseY - 3, 3)
-    const eyeLabel = this.add.text(eyeX, baseY + 40, 'Eye', {
+    const eyeLabel = this.add.text(eyeX, baseY + 40, t('observation.eye'), {
       fontSize: '11px',
       color: '#ffffff',
       fontFamily: 'Georgia, serif',
@@ -76,7 +77,7 @@ export class ObservationScene extends Phaser.Scene {
     const rayG = this.add.graphics()
     rayG.setDepth(6)
 
-    const rayLabel1 = this.add.text(apertureX, baseY - 60, 'Light travels in straight lines', {
+    const rayLabel1 = this.add.text(apertureX, baseY - 60, t('observation.straightLines'), {
       fontSize: '12px',
       color: '#ffff44',
       fontFamily: 'Georgia, serif',
@@ -85,7 +86,7 @@ export class ObservationScene extends Phaser.Scene {
     rayLabel1.setAlpha(0)
     rayLabel1.setDepth(10)
 
-    const rayLabel2 = this.add.text(w / 2, baseY + 100, 'Light enters the eye -> Vision', {
+    const rayLabel2 = this.add.text(w / 2, baseY + 100, t('observation.eyeReceives'), {
       fontSize: '12px',
       color: '#69db7c',
       fontFamily: 'Georgia, serif',
@@ -94,7 +95,7 @@ export class ObservationScene extends Phaser.Scene {
     rayLabel2.setAlpha(0)
     rayLabel2.setDepth(10)
 
-    const step3Label = this.add.text(w / 2, h - 40, 'The eye does NOT emit rays. It receives light.', {
+    const step3Label = this.add.text(w / 2, h - 40, t('observation.eyeDoesNotEmit'), {
       fontSize: '13px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',
@@ -110,7 +111,7 @@ export class ObservationScene extends Phaser.Scene {
       h - 30,
       200,
       30,
-      'Continue to reflection',
+      t('observation.continue'),
       0x2a1a0a,
       0x4a3728,
       () => this.skipToNextScene(),
@@ -132,109 +133,82 @@ export class ObservationScene extends Phaser.Scene {
   ): void {
     const topStart = { x: objectX, y: baseY - 35 }
     const bottomStart = { x: objectX, y: baseY + 35 }
-    const eyeCenter = { x: eyeX, y: baseY }
+    const eyeTop = { x: eyeX, y: baseY - 10 }
+    const eyeBottom = { x: eyeX, y: baseY + 10 }
+    const apertureCenter = { x: apertureX, y: baseY }
 
-    let phase = 0
-    const totalSteps = 120
+    this.drawStraightRay(rayG, topStart, eyeBottom, 0xffff44)
+    this.drawStraightRay(rayG, bottomStart, eyeTop, 0xffaa22)
 
-    const timer = this.time.addEvent({
-      delay: 40,
-      repeat: totalSteps,
-      callback: () => {
-        phase++
-        rayG.clear()
+    rayG.lineStyle(1, 0xffff44, 0.15)
+    rayG.beginPath()
+    rayG.moveTo(apertureX - 8, baseY - 4)
+    rayG.lineTo(apertureX + 8, baseY + 4)
+    rayG.strokePath()
+    rayG.beginPath()
+    rayG.moveTo(apertureX - 8, baseY + 4)
+    rayG.lineTo(apertureX + 8, baseY - 4)
+    rayG.strokePath()
 
-        if (phase <= 40) {
-          const t = phase / 40
-          const endX = Phaser.Math.Linear(objectX, apertureX, t)
+    rayLabel1.setAlpha(1)
+    this.tweens.add({ targets: rayLabel1, alpha: { from: 0, to: 1 }, duration: 500, delay: 200 })
 
-          rayG.lineStyle(2.5, 0xffff44, 0.7)
-          rayG.beginPath()
-          rayG.moveTo(topStart.x, topStart.y)
-          rayG.lineTo(endX, topStart.y)
-          rayG.strokePath()
+    const crossLabel = this.add.text(apertureX + 50, baseY - 22, t('observation.raysCross'), {
+      fontSize: '10px',
+      color: '#ffff44',
+      fontFamily: 'Georgia, serif',
+      fontStyle: 'italic',
+    }).setOrigin(0, 0.5).setDepth(10).setAlpha(0)
+    this.tweens.add({ targets: crossLabel, alpha: 1, duration: 500, delay: 800 })
 
-          rayG.beginPath()
-          rayG.moveTo(bottomStart.x, bottomStart.y)
-          rayG.lineTo(endX, bottomStart.y)
-          rayG.strokePath()
+    this.time.delayedCall(1500, () => {
+      rayLabel2.setAlpha(1)
+      this.tweens.add({ targets: rayLabel2, alpha: { from: 0, to: 1 }, duration: 500 })
+    })
 
-          if (phase === 40) {
-            rayLabel1.setAlpha(1)
-            this.tweens.add({
-              targets: rayLabel1,
-              alpha: { from: 0, to: 1 },
-              duration: 500,
-            })
-          }
-        } else if (phase <= 80) {
-          const t = (phase - 40) / 40
-          const midX = Phaser.Math.Linear(apertureX, eyeCenter.x, t)
-
-          rayG.lineStyle(2.5, 0xffff44, 0.7)
-          rayG.beginPath()
-          rayG.moveTo(topStart.x, topStart.y)
-          rayG.lineTo(apertureX, topStart.y)
-          rayG.lineTo(midX, eyeCenter.y - 10)
-          rayG.strokePath()
-
-          rayG.beginPath()
-          rayG.moveTo(bottomStart.x, bottomStart.y)
-          rayG.lineTo(apertureX, bottomStart.y)
-          rayG.lineTo(midX, eyeCenter.y + 10)
-          rayG.strokePath()
-
-          rayG.lineStyle(1, 0xffff44, 0.2)
-          rayG.beginPath()
-          rayG.moveTo(objectX, topStart.y)
-          rayG.lineTo(objectX, bottomStart.y)
-          rayG.strokePath()
-
-          if (phase === 80) {
-            rayLabel2.setAlpha(1)
-            this.tweens.add({
-              targets: rayLabel2,
-              alpha: { from: 0, to: 1 },
-              duration: 500,
-            })
-          }
-        } else {
-          const t = (phase - 80) / (totalSteps - 80)
-
-          rayG.lineStyle(2.5, 0xffff44, 0.7)
-          rayG.beginPath()
-          rayG.moveTo(topStart.x, topStart.y)
-          rayG.lineTo(apertureX, topStart.y)
-          rayG.lineTo(eyeCenter.x - 10 + t * 10, eyeCenter.y - 10)
-          rayG.strokePath()
-
-          rayG.beginPath()
-          rayG.moveTo(bottomStart.x, bottomStart.y)
-          rayG.lineTo(apertureX, bottomStart.y)
-          rayG.lineTo(eyeCenter.x - 10 + t * 10, eyeCenter.y + 10)
-          rayG.strokePath()
-
-          rayG.lineStyle(1, 0xffff44, 0.2)
-          rayG.beginPath()
-          rayG.moveTo(objectX, topStart.y)
-          rayG.lineTo(objectX, bottomStart.y)
-          rayG.strokePath()
-
-          if (!step3Label.alpha) {
-            step3Label.setAlpha(1)
-            this.tweens.add({
-              targets: step3Label,
-              alpha: { from: 0, to: 1 },
-              duration: 800,
-            })
-          }
-        }
-      },
+    this.time.delayedCall(3000, () => {
+      step3Label.setAlpha(1)
+      this.tweens.add({ targets: step3Label, alpha: { from: 0, to: 1 }, duration: 800 })
     })
 
     this.time.delayedCall(6000, () => {
-      timer.destroy()
       this.startDialogue()
+    })
+  }
+
+  private drawStraightRay(
+    rayG: Phaser.GameObjects.Graphics,
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+    color: number,
+  ): void {
+    const midX = (from.x + to.x) / 2
+    const midY = (from.y + to.y) / 2
+
+    const glow = this.add.graphics().setDepth(5)
+    glow.lineStyle(8, color, 0.06)
+    glow.beginPath(); glow.moveTo(from.x, from.y); glow.lineTo(to.x, to.y); glow.strokePath()
+    glow.lineStyle(5, color, 0.1)
+    glow.beginPath(); glow.moveTo(from.x, from.y); glow.lineTo(to.x, to.y); glow.strokePath()
+
+    rayG.lineStyle(2.5, color, 0.85)
+    rayG.beginPath(); rayG.moveTo(from.x, from.y); rayG.lineTo(to.x, to.y); rayG.strokePath()
+
+    rayG.fillStyle(0xffffff, 0.25)
+    rayG.fillCircle(from.x, from.y, 3)
+    rayG.fillCircle(to.x, to.y, 3)
+
+    const particle = this.add.particles(midX, midY, 'particle', {
+      speed: { min: 1, max: 3 },
+      scale: { start: 0.25, end: 0 },
+      alpha: { start: 0.5, end: 0 },
+      lifespan: 1400,
+      frequency: 100,
+      quantity: 1,
+      tint: color,
+    }).setDepth(8)
+    this.time.delayedCall(4000, () => {
+      this.tweens.add({ targets: particle, alpha: 0, duration: 500 })
     })
   }
 

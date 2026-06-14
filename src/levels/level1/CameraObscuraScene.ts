@@ -4,6 +4,7 @@ import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { ThreeDWorld, type ThreeDObject } from '../../systems/ThreeDWorld.ts'
 import { DIALOGUES } from '../../data/dialogues.ts'
 import { UIButton } from '../../ui/UIButton.ts'
+import { t } from '../../i18n/index.ts'
 
 type DragObject = {
   sprite: Phaser.GameObjects.Image
@@ -27,7 +28,11 @@ export class CameraObscuraScene extends Phaser.Scene {
   private projectionImage?: Phaser.GameObjects.Image
   private transitionLock = false
   private continueButton?: UIButton
-  private threeFlame: ThreeDObject | null = null
+  private apertureSize = 4
+  private wallDistOffset = 0
+  private apertureSizeText!: Phaser.GameObjects.Text
+  private wallDistText!: Phaser.GameObjects.Text
+  private opticsControlsG!: Phaser.GameObjects.Graphics
 
   private static readonly CANDLE_TARGET = { x: 180, y: 340 }
   private static readonly BOX_TARGET = { x: 420, y: 330 }
@@ -62,14 +67,17 @@ export class CameraObscuraScene extends Phaser.Scene {
     this.createLabBackground(w, h)
     this.createFloor(w, h)
     this.createTable(w, h)
-    this.createAperture()
-    this.createWall()
+    this.apertureGraphic = this.add.graphics().setDepth(8)
+    this.wallGraphic = this.add.graphics().setDepth(4)
+    this.drawAperture()
+    this.drawWall()
     this.createDropZones()
     this.createDraggableObjects()
     this.createLabels()
     this.createSceneControls(w, h)
+    this.createApertureControls(w, h)
 
-    this.instructionText = this.add.text(w / 2, 16, 'Place the candle and box, then reveal the inverted image on the wall.', {
+    this.instructionText = this.add.text(w / 2, 16, t('camObscura.instruction'), {
       fontSize: '12px',
       color: '#b8a88a',
       fontFamily: 'Georgia, serif',
@@ -84,7 +92,7 @@ export class CameraObscuraScene extends Phaser.Scene {
   private createStepIndicator(w: number): void {
     this.stepIndicator = this.add.graphics()
     this.stepIndicator.setDepth(30)
-    const steps = ['Drag Objects', 'Align Aperture', 'Observe Inversion']
+    const steps = [t('camObscura.step1'), t('camObscura.step2'), t('camObscura.step3')]
     const startX = w / 2 - 180
     for (let i = 0; i < steps.length; i++) {
       const x = startX + i * 180
@@ -111,7 +119,7 @@ export class CameraObscuraScene extends Phaser.Scene {
 
   private updateStepIndicator(step: number): void {
     this.stepIndicator.clear()
-    const steps = ['Drag Objects', 'Align Aperture', 'Observe Inversion']
+    const steps = [t('camObscura.step1'), t('camObscura.step2'), t('camObscura.step3')]
     const startX = this.scale.width / 2 - 180
     for (let i = 0; i < steps.length; i++) {
       const x = startX + i * 180
@@ -193,33 +201,34 @@ export class CameraObscuraScene extends Phaser.Scene {
     dropG.fillRect(boxZone.x - 35, boxZone.y - 30, 70, 60)
   }
 
-  private createAperture(): void {
-    this.apertureGraphic = this.add.graphics()
-    this.apertureGraphic.setDepth(8)
+  private drawAperture(): void {
+    this.apertureGraphic.clear()
 
     const ax = CameraObscuraScene.APERTURE_X
     const ay = CameraObscuraScene.APERTURE_Y
+    const halfW = 20 + this.apertureSize
+    const halfH = 50 + this.apertureSize
+    const holeW = Math.max(2, this.apertureSize)
 
     this.apertureGraphic.fillStyle(0x2a2018, 0.9)
-    this.apertureGraphic.fillRect(ax - 25, ay - 55, 50, 110)
+    this.apertureGraphic.fillRect(ax - halfW, ay - halfH, halfW * 2, halfH * 2)
 
     this.apertureGraphic.fillStyle(0x000000, 1)
-    this.apertureGraphic.fillRect(ax - 20, ay - 50, 40, 100)
+    this.apertureGraphic.fillRect(ax - holeW, ay - halfH + 10, holeW * 2, halfH * 2 - 20)
 
     this.apertureGraphic.fillStyle(0x1a1410, 0.9)
-    this.apertureGraphic.fillRect(ax - 2, ay - 50, 4, 100)
+    this.apertureGraphic.fillRect(ax - 1, ay - halfH + 10, 2, halfH * 2 - 20)
 
-    this.apertureGraphic.fillStyle(0xffff44, 0.08)
-    this.apertureGraphic.fillCircle(ax, ay, 3)
+    this.apertureGraphic.fillStyle(0xffff44, 0.08 + this.apertureSize * 0.01)
+    this.apertureGraphic.fillCircle(ax, ay, Math.max(2, holeW))
 
-    this.apertureGraphic.setAlpha(0.6)
+    this.apertureGraphic.setAlpha(Math.min(1, 0.4 + this.apertureSize * 0.03))
   }
 
-  private createWall(): void {
-    this.wallGraphic = this.add.graphics()
-    this.wallGraphic.setDepth(4)
+  private drawWall(): void {
+    this.wallGraphic.clear()
 
-    const wx = CameraObscuraScene.WALL_X
+    const wx = CameraObscuraScene.WALL_X + this.wallDistOffset
 
     this.wallGraphic.fillStyle(0x1a1814, 0.5)
     this.wallGraphic.fillRect(wx - 4, 80, 8, 400)
@@ -232,7 +241,7 @@ export class CameraObscuraScene extends Phaser.Scene {
   }
 
   private createLabels(): void {
-    const candleLabel = this.add.text(CameraObscuraScene.CANDLE_TARGET.x, CameraObscuraScene.CANDLE_TARGET.y - 45, 'Place candle here', {
+    const candleLabel = this.add.text(CameraObscuraScene.CANDLE_TARGET.x, CameraObscuraScene.CANDLE_TARGET.y - 45, t('camObscura.dropCandle'), {
       fontSize: '9px',
       color: '#5a4a3a',
       fontFamily: 'Georgia, serif',
@@ -241,7 +250,7 @@ export class CameraObscuraScene extends Phaser.Scene {
     candleLabel.setOrigin(0.5)
     candleLabel.setDepth(10)
 
-    const boxLabel = this.add.text(CameraObscuraScene.BOX_TARGET.x, CameraObscuraScene.BOX_TARGET.y - 45, 'Place box here', {
+    const boxLabel = this.add.text(CameraObscuraScene.BOX_TARGET.x, CameraObscuraScene.BOX_TARGET.y - 45, t('camObscura.dropBox'), {
       fontSize: '9px',
       color: '#5a4a3a',
       fontFamily: 'Georgia, serif',
@@ -250,13 +259,13 @@ export class CameraObscuraScene extends Phaser.Scene {
     boxLabel.setOrigin(0.5)
     boxLabel.setDepth(10)
 
-    this.add.text(CameraObscuraScene.APERTURE_X + 50, CameraObscuraScene.APERTURE_Y - 5, '- Aperture', {
+    this.add.text(CameraObscuraScene.APERTURE_X + 50, CameraObscuraScene.APERTURE_Y - 5, t('camObscura.labelAperture'), {
       fontSize: '9px',
       color: '#5a4a3a',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0, 0.5).setDepth(10)
 
-    this.add.text(CameraObscuraScene.WALL_X + 15, CameraObscuraScene.WALL_Y - 5, '| Projection Wall', {
+    this.add.text(CameraObscuraScene.WALL_X + 15, CameraObscuraScene.WALL_Y - 5, t('camObscura.labelWall'), {
       fontSize: '9px',
       color: '#5a4a3a',
       fontFamily: 'Georgia, serif',
@@ -264,7 +273,7 @@ export class CameraObscuraScene extends Phaser.Scene {
   }
 
   private createSceneControls(w: number, _h: number): void {
-    this.add.text(w - 18, 18, 'Need a shortcut?', {
+    this.add.text(w - 18, 18, t('camObscura.shortcut'), {
       fontSize: '9px',
       color: '#7f6b4c',
       fontFamily: 'Georgia, serif',
@@ -276,12 +285,61 @@ export class CameraObscuraScene extends Phaser.Scene {
       44,
       180,
       30,
-      'Skip to explanation',
+       t('camObscura.skip'),
       0x2a1a0a,
       0x4a3728,
       () => this.skipToNextScene(),
     )
     this.continueButton.setDepth(45)
+  }
+
+  private createApertureControls(w: number, _h: number): void {
+    this.opticsControlsG = this.add.graphics().setDepth(44)
+    this.opticsControlsG.fillStyle(0x000000, 0.5)
+    this.opticsControlsG.fillRoundedRect(w - 190, 82, 182, 56, 6)
+    this.opticsControlsG.lineStyle(1, 0x5a4a3a, 0.4)
+    this.opticsControlsG.strokeRoundedRect(w - 190, 82, 182, 56, 6)
+
+    this.add.text(w - 184, 87, t('camObscura.holeSize'), {
+      fontSize: '9px', color: '#b8a88a', fontFamily: 'Georgia, serif',
+    }).setDepth(45)
+
+    this.apertureSizeText = this.add.text(w - 130, 87, `${this.apertureSize}px`, {
+      fontSize: '9px', color: '#ffd700', fontFamily: 'Georgia, serif',
+    }).setDepth(45)
+
+    const holeDec = this.add.text(w - 100, 86, '−', {
+      fontSize: '14px', color: '#b8a88a', fontFamily: 'Georgia, serif',
+    }).setInteractive({ useHandCursor: true }).setDepth(45)
+    holeDec.on('pointerdown', () => { this.apertureSize = Math.max(2, this.apertureSize - 2); this.updateOptics() })
+    const holeInc = this.add.text(w - 80, 86, '+', {
+      fontSize: '14px', color: '#b8a88a', fontFamily: 'Georgia, serif',
+    }).setInteractive({ useHandCursor: true }).setDepth(45)
+    holeInc.on('pointerdown', () => { this.apertureSize = Math.min(20, this.apertureSize + 2); this.updateOptics() })
+
+    this.add.text(w - 184, 107, t('camObscura.wallDist'), {
+      fontSize: '9px', color: '#b8a88a', fontFamily: 'Georgia, serif',
+    }).setDepth(45)
+
+    this.wallDistText = this.add.text(w - 130, 107, `${CameraObscuraScene.WALL_X + this.wallDistOffset}`, {
+      fontSize: '9px', color: '#ffd700', fontFamily: 'Georgia, serif',
+    }).setDepth(45)
+
+    const distDec = this.add.text(w - 100, 106, '−', {
+      fontSize: '14px', color: '#b8a88a', fontFamily: 'Georgia, serif',
+    }).setInteractive({ useHandCursor: true }).setDepth(45)
+    distDec.on('pointerdown', () => { this.wallDistOffset = Math.max(-70, this.wallDistOffset - 20); this.updateOptics() })
+    const distInc = this.add.text(w - 80, 106, '+', {
+      fontSize: '14px', color: '#b8a88a', fontFamily: 'Georgia, serif',
+    }).setInteractive({ useHandCursor: true }).setDepth(45)
+    distInc.on('pointerdown', () => { this.wallDistOffset = Math.min(110, this.wallDistOffset + 20); this.updateOptics() })
+  }
+
+  private updateOptics(): void {
+    this.apertureSizeText.setText(`${this.apertureSize}px`)
+    this.wallDistText.setText(`${CameraObscuraScene.WALL_X + this.wallDistOffset}`)
+    this.drawAperture()
+    this.drawWall()
   }
 
   private createPedagogicalPanel(w: number, _h: number): void {
@@ -299,18 +357,18 @@ export class CameraObscuraScene extends Phaser.Scene {
     })
     panel.add(icon)
 
-    const title = new Phaser.GameObjects.Text(this, -150, 12, 'Camera Obscura - Ibn al-Haytham\'s Experiment', {
+    const title = new Phaser.GameObjects.Text(this, -150, 12, t('camObscura.panelTitle'), {
       fontSize: '12px', color: '#ffd700', fontFamily: 'Georgia, serif', fontStyle: 'italic',
     })
     panel.add(title)
 
-    const desc = new Phaser.GameObjects.Text(this, -150, 34, 'Drag the candle and box to their positions.\nWe will observe how light behaves through a small hole.', {
+    const desc = new Phaser.GameObjects.Text(this, -150, 34, t('camObscura.panelDesc'), {
       fontSize: '10px', color: '#b8a8a0', fontFamily: 'Georgia, serif',
       wordWrap: { width: 340 }, lineSpacing: 3,
     })
     panel.add(desc)
 
-    const closeBtn = new Phaser.GameObjects.Text(this, 185, 85, '[OK]', {
+    const closeBtn = new Phaser.GameObjects.Text(this, 185, 85, t('camObscura.ok'), {
       fontSize: '11px', color: '#ffd700', fontFamily: 'Georgia, serif',
     }).setOrigin(1, 0.5)
     closeBtn.setInteractive({ useHandCursor: true })
@@ -426,10 +484,6 @@ export class CameraObscuraScene extends Phaser.Scene {
           : this.threeWorld.create3DBox(targetX, targetY)
         this.threeWorld.addObject(obj.threeObj)
 
-        if (isCandle) {
-          this.threeFlame = obj.threeObj
-        }
-
         const successG = this.add.graphics().setDepth(25)
         successG.fillStyle(0x44ff44, 0.12).fillCircle(targetX, targetY, 30)
         this.tweens.add({ targets: successG, alpha: 0, scale: 2, duration: 600, onComplete: () => successG.destroy() })
@@ -458,7 +512,7 @@ export class CameraObscuraScene extends Phaser.Scene {
   private showExperimentSuccess(): void {
     if (this.transitionLock) return
     new ProgressSystem().addXP('level1', 50)
-    this.instructionText.setText('✓ Experiment complete! Watch the light rays...')
+    this.instructionText.setText(t('camObscura.success'))
     this.updateStepIndicator(2)
 
     this.apertureGraphic.setAlpha(1)
@@ -480,6 +534,16 @@ export class CameraObscuraScene extends Phaser.Scene {
     this.wallGraphic.lineTo(CameraObscuraScene.WALL_X, 480)
     this.wallGraphic.strokePath()
 
+    const disappearText = this.add.text(this.scale.width / 2, 140, t('camObscura.disappear'), {
+      fontSize: '10px',
+      color: '#b8a88a',
+      fontFamily: 'Georgia, serif',
+      fontStyle: 'italic',
+      align: 'center',
+      wordWrap: { width: 400 },
+    }).setOrigin(0.5).setDepth(30).setAlpha(0)
+    this.tweens.add({ targets: disappearText, alpha: 1, duration: 600 })
+
     this.animateInversionRays()
     this.spawnFlareParticles(CameraObscuraScene.CANDLE_TARGET.x, CameraObscuraScene.CANDLE_TARGET.y, 0xffff44)
 
@@ -495,7 +559,7 @@ export class CameraObscuraScene extends Phaser.Scene {
     const cy = CameraObscuraScene.CANDLE_TARGET.y
     const ax = CameraObscuraScene.APERTURE_X
     const ay = CameraObscuraScene.APERTURE_Y
-    const wx = CameraObscuraScene.WALL_X
+    const wx = CameraObscuraScene.WALL_X + this.wallDistOffset
     const wy = CameraObscuraScene.WALL_Y
 
     const flameTop = { x: cx, y: cy - 25 }
@@ -503,129 +567,61 @@ export class CameraObscuraScene extends Phaser.Scene {
     const imageTop = { x: wx, y: wy - 35 }
     const imageBottom = { x: wx, y: wy + 35 }
 
-    this.animateRayWithParticles(
-      flameTop.x, flameTop.y,
-      ax, ay,
-      imageBottom.x, imageBottom.y,
-      0xffdd44, 'Top ray -> crosses DOWN to bottom',
-    )
-    this.animateRayWithParticles(
-      flameBottom.x, flameBottom.y,
-      ax, ay,
-      imageTop.x, imageTop.y,
-      0xffaa22, 'Bottom ray -> crosses UP to top',
-    )
+    this.drawRayPair(flameTop, flameBottom, ax, ay, imageBottom, imageTop)
   }
 
-  private animateRayWithParticles(
-    startX: number, startY: number,
-    midX: number, midY: number,
-    endX: number, endY: number,
-    color: number,
-    label: string,
+  private drawRayPair(
+    topSrc: { x: number; y: number },
+    bottomSrc: { x: number; y: number },
+    ax: number, ay: number,
+    topDst: { x: number; y: number },
+    bottomDst: { x: number; y: number },
   ): void {
-    const rayG = this.add.graphics()
-    rayG.setDepth(25)
-    const glowG = this.add.graphics()
-    glowG.setDepth(24)
+    const rayG = this.add.graphics().setDepth(25)
+    const glowG = this.add.graphics().setDepth(24)
 
-    const totalSteps = 80
-    let step = 0
+    const drawStaticRay = (x1: number, y1: number, x2: number, y2: number, color: number) => {
+      glowG.lineStyle(8, color, 0.08)
+      glowG.beginPath(); glowG.moveTo(x1, y1); glowG.lineTo(x2, y2); glowG.strokePath()
+      glowG.lineStyle(4, color, 0.12)
+      glowG.beginPath(); glowG.moveTo(x1, y1); glowG.lineTo(x2, y2); glowG.strokePath()
+      rayG.lineStyle(2.5, color, 0.85)
+      rayG.beginPath(); rayG.moveTo(x1, y1); rayG.lineTo(x2, y2); rayG.strokePath()
+    }
 
-    const rayParticles = this.add.particles(startX, startY, 'particle', {
-      speed: { min: 2, max: 8 },
-      scale: { start: 0.4, end: 0 },
-      alpha: { start: 0.6, end: 0 },
-      lifespan: 1200,
-      frequency: 80,
-      quantity: 1,
-      tint: color,
-    })
-    rayParticles.setDepth(26)
+    drawStaticRay(topSrc.x, topSrc.y, bottomDst.x, bottomDst.y, 0xffdd44)
+    drawStaticRay(bottomSrc.x, bottomSrc.y, topDst.x, topDst.y, 0xffaa22)
 
-    const labelText = this.add.text((startX + endX) / 2, Math.min(startY, endY) - 30, label, {
-      fontSize: '9px',
-      color: '#ffff44',
-      fontFamily: 'Georgia, serif',
-      fontStyle: 'italic',
-    })
-    labelText.setOrigin(0.5)
-    labelText.setDepth(30)
-    labelText.setAlpha(0)
+    rayG.fillStyle(0xffffff, 0.3)
+    rayG.fillCircle(ax, ay, 4)
+    rayG.fillStyle(0xffff44, 0.25)
+    rayG.fillCircle(ax, ay, 8)
 
-    this.time.addEvent({
-      delay: 30,
-      repeat: totalSteps,
-      callback: () => {
-        step++
-        rayG.clear()
-        glowG.clear()
+    this.add.text(ax + 8, ay + 12, t('camObscura.crossHere'), {
+      fontSize: '9px', color: '#ffff44', fontFamily: 'Georgia, serif', fontStyle: 'italic',
+    }).setOrigin(0, 0.5).setDepth(30)
 
-        const t1 = Math.min(step / 25, 1)
-        const t2 = step > 25 ? Math.min((step - 25) / 30, 1) : 0
+    this.add.text((topSrc.x + bottomDst.x) / 2 - 20, Math.min(topSrc.y, bottomDst.y) - 24, t('camObscura.topToBottom'), {
+      fontSize: '9px', color: '#ffe066', fontFamily: 'Georgia, serif', fontStyle: 'italic',
+    }).setOrigin(0.5).setDepth(30)
 
-        const midProgressX = Phaser.Math.Linear(startX, midX, t1)
-        const midProgressY = Phaser.Math.Linear(startY, midY, t1)
-        const endProgressX = Phaser.Math.Linear(midX, endX, t2)
-        const endProgressY = Phaser.Math.Linear(midY, endY, t2)
+    this.add.text((bottomSrc.x + topDst.x) / 2 - 20, Math.min(bottomSrc.y, topDst.y) + 16, t('camObscura.bottomToTop'), {
+      fontSize: '9px', color: '#ffbb44', fontFamily: 'Georgia, serif', fontStyle: 'italic',
+    }).setOrigin(0.5).setDepth(30)
 
-        const alpha = 0.5 + 0.3 * Math.sin(step * 0.3)
-
-        if (t1 < 1) {
-          this.drawGlowRay(rayG, glowG, startX, startY, midProgressX, midProgressY, color, alpha, 2.5)
-        } else {
-          this.drawGlowRay(rayG, glowG, startX, startY, midX, midY, color, alpha, 2.5)
-          const p = (step - 25) / 30
-          const glowR = 4 + 6 * (1 - Math.abs(p - 0.5) * 2)
-          glowG.fillStyle(0xffffff, 0.15)
-          glowG.fillCircle(midX, midY, glowR)
-          glowG.fillStyle(color, 0.1 + 0.1 * Math.sin(step * 0.5))
-          glowG.fillCircle(midX, midY, glowR + 8)
-
-          this.drawGlowRay(rayG, glowG, midX, midY, endProgressX, endProgressY, color, alpha, 2)
-        }
-
-        if (step > 30 && !labelText.alpha) {
-          this.tweens.add({ targets: labelText, alpha: 1, duration: 400 })
-        }
-
-        if (step >= totalSteps) {
-          rayParticles.stop()
-          this.tweens.add({
-            targets: [rayParticles],
-            alpha: 0,
-            duration: 800,
-            delay: 2000,
-          })
-        }
-      },
-    })
-  }
-
-  private drawGlowRay(
-    rayG: Phaser.GameObjects.Graphics,
-    glowG: Phaser.GameObjects.Graphics,
-    x1: number, y1: number,
-    x2: number, y2: number,
-    color: number,
-    alpha: number,
-    width: number,
-  ): void {
-    rayG.lineStyle(width, color, alpha)
-    rayG.beginPath()
-    rayG.moveTo(x1, y1)
-    rayG.lineTo(x2, y2)
-    rayG.strokePath()
-
-    glowG.lineStyle(width + 4, color, alpha * 0.15)
-    glowG.beginPath()
-    glowG.moveTo(x1, y1)
-    glowG.lineTo(x2, y2)
-    glowG.strokePath()
-
-    rayG.fillStyle(0xffffff, alpha * 0.3)
-    rayG.fillCircle(x1, y1, width * 0.8)
-    rayG.fillCircle(x2, y2, width * 0.8)
+    const wx = CameraObscuraScene.WALL_X + this.wallDistOffset
+    const wy = CameraObscuraScene.WALL_Y
+    const arrowG = this.add.graphics().setDepth(8).setAlpha(0)
+    arrowG.lineStyle(1.5, 0xffff44, 0.6)
+    arrowG.beginPath()
+    arrowG.moveTo(CameraObscuraScene.CANDLE_TARGET.x + 30, CameraObscuraScene.CANDLE_TARGET.y - 30)
+    arrowG.lineTo(wx - 20, wy + 20)
+    arrowG.strokePath()
+    arrowG.beginPath()
+    arrowG.moveTo(CameraObscuraScene.CANDLE_TARGET.x + 30, CameraObscuraScene.CANDLE_TARGET.y + 30)
+    arrowG.lineTo(wx - 20, wy - 20)
+    arrowG.strokePath()
+    this.tweens.add({ targets: arrowG, alpha: 1, duration: 800, delay: 500 })
   }
 
   private spawnFlareParticles(x: number, y: number, color: number): void {
@@ -672,22 +668,7 @@ export class CameraObscuraScene extends Phaser.Scene {
       ease: 'Power2',
     })
 
-    const arrowG = this.add.graphics()
-    arrowG.setDepth(8)
-    arrowG.setAlpha(0)
-    arrowG.lineStyle(1.5, 0xffff44, 0.6)
-    arrowG.beginPath()
-    arrowG.moveTo(CameraObscuraScene.CANDLE_TARGET.x + 30, CameraObscuraScene.CANDLE_TARGET.y - 30)
-    arrowG.lineTo(wx - 20, wy + 20)
-    arrowG.strokePath()
-    arrowG.beginPath()
-    arrowG.moveTo(CameraObscuraScene.CANDLE_TARGET.x + 30, CameraObscuraScene.CANDLE_TARGET.y + 30)
-    arrowG.lineTo(wx - 20, wy - 20)
-    arrowG.strokePath()
-
-    this.tweens.add({ targets: arrowG, alpha: 1, duration: 800, delay: 1500 })
-
-    const invertLabel = this.add.text(wx, wy + 72, 'INVERTED IMAGE', {
+    const invertLabel = this.add.text(wx, wy + 72, t('camObscura.inverted'), {
       fontSize: '10px',
       color: '#ffff44',
       fontFamily: 'Georgia, serif',
@@ -698,65 +679,6 @@ export class CameraObscuraScene extends Phaser.Scene {
     this.tweens.add({ targets: invertLabel, alpha: 1, duration: 600, delay: 2000 })
 
     const crossMark = this.add.text(wx - 34, CameraObscuraScene.APERTURE_Y - 18, 'x', {
-      fontSize: '18px',
-      color: '#ffff44',
-      fontFamily: 'Georgia, serif',
-    })
-    crossMark.setOrigin(0.5)
-    crossMark.setDepth(10)
-    crossMark.setAlpha(0)
-    this.tweens.add({ targets: crossMark, alpha: 0.6, duration: 500, delay: 500 })
-  }
-
-  private createInvertedCandle(): void {
-    const wx = CameraObscuraScene.WALL_X
-    const wy = CameraObscuraScene.WALL_Y
-
-    const invBody = this.add.graphics()
-    invBody.setDepth(7)
-    invBody.fillStyle(0x222222, 0.5)
-    invBody.fillRect(wx - 6, wy - 5, 12, 40)
-    invBody.fillStyle(0x333333, 0.3)
-    invBody.fillRect(wx - 5, wy - 3, 10, 36)
-
-    const invFlame = this.add.graphics()
-    invFlame.setDepth(7)
-    invFlame.fillStyle(0xff6600, 0.4)
-    invFlame.fillTriangle(wx, wy - 12, wx - 4, wy - 5, wx + 4, wy - 5)
-    invFlame.fillStyle(0xffaa00, 0.2)
-    invFlame.fillCircle(wx, wy - 12, 3)
-
-    invBody.setAlpha(0)
-    invFlame.setAlpha(0)
-    this.tweens.add({ targets: [invBody, invFlame], alpha: 1, duration: 1200, ease: 'Power2' })
-
-    const arrowG = this.add.graphics()
-    arrowG.setDepth(8)
-    arrowG.setAlpha(0)
-
-    arrowG.lineStyle(1.5, 0xffff44, 0.6)
-    arrowG.beginPath()
-    arrowG.moveTo(CameraObscuraScene.CANDLE_TARGET.x + 30, CameraObscuraScene.CANDLE_TARGET.y - 30)
-    arrowG.lineTo(wx - 20, wy + 20)
-    arrowG.strokePath()
-    arrowG.beginPath()
-    arrowG.moveTo(CameraObscuraScene.CANDLE_TARGET.x + 30, CameraObscuraScene.CANDLE_TARGET.y + 30)
-    arrowG.lineTo(wx - 20, wy - 20)
-    arrowG.strokePath()
-
-    this.tweens.add({ targets: arrowG, alpha: 1, duration: 800, delay: 1500 })
-
-    const invertLabel = this.add.text(wx, wy + 70, '⬇ INVERTED ⬇', {
-      fontSize: '10px',
-      color: '#ffff44',
-      fontFamily: 'Georgia, serif',
-    })
-    invertLabel.setOrigin(0.5)
-    invertLabel.setDepth(10)
-    invertLabel.setAlpha(0)
-    this.tweens.add({ targets: invertLabel, alpha: 1, duration: 600, delay: 2000 })
-
-    const crossMark = this.add.text(wx - 30, CameraObscuraScene.APERTURE_Y - 15, '✕', {
       fontSize: '18px',
       color: '#ffff44',
       fontFamily: 'Georgia, serif',

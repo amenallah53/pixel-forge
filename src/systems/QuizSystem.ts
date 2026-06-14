@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import type { QuizQuestion } from '../data/types.ts'
 import { UIButton } from '../ui/UIButton.ts'
+import { t } from '../i18n/index.ts'
 
 export type QuizResult = {
   questionId: string
@@ -71,7 +72,7 @@ export class QuizSystem {
     this.feedbackText.setText('')
 
     const q = this.questions[this.currentQuestionIndex]
-    this.questionText.setText(q.question)
+    this.questionText.setText(t(q.question))
 
     const startY = 140
     const optionHeight = 50
@@ -86,7 +87,7 @@ export class QuizSystem {
         y,
         optionWidth,
         optionHeight,
-        `${opt.label}. ${opt.text}`,
+        `${t(opt.label)}. ${t(opt.text)}`,
         0x2a1a0a,
         0x4a3728,
         () => this.handleAnswer(index),
@@ -110,7 +111,7 @@ export class QuizSystem {
       selectedIndex: index,
     })
 
-    this.feedbackText.setText(correct ? '✓ Correct!' : `✗ Incorrect. ${q.explanation}`)
+    this.feedbackText.setText(correct ? t('quiz.correct') : t('quiz.incorrect') + ' ' + t(q.explanation))
 
     if (!correct) {
       this.feedbackText.setColor('#ff6b6b')

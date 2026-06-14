@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { DialogueBox } from '../ui/DialogueBox.ts'
 import type { DialogueLine } from '../data/types.ts'
+import { t } from '../i18n/index.ts'
 
 export class DialogueSystem {
   private dialogueBox: DialogueBox
@@ -44,7 +45,7 @@ export class DialogueSystem {
     const line = this.currentLines[this.lineIndex]
     this.lineIndex++
 
-    await this.dialogueBox.show(line.speaker, line.text, line.portrait)
+    await this.dialogueBox.show(t(line.speaker), t(line.text), line.portrait)
     this.showNextLine()
   }
 

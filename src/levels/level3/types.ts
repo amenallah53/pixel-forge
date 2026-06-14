@@ -1,6 +1,6 @@
 export const DISTILLATION_FRAGMENT = {
   id: 'distillation',
-  name: 'DISTILLATION',
-  description: 'Liquids can be separated by heating, vaporizing, and condensing them again.',
+  name: 'fragment.distillation',
+  description: 'fragment.distillation',
   color: 0xf2c86f,
 }

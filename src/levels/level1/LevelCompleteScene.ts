@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { ProgressSystem } from '../../systems/ProgressSystem.ts'
 import { LEVELS } from '../../data/levels.ts'
+import { t } from '../../i18n/index.ts'
 
 const LEVEL1 = LEVELS['level1']
 
@@ -53,11 +54,11 @@ export class LevelCompleteScene extends Phaser.Scene {
     timelineG.strokePath()
 
     const eras = [
-      { year: '1015', label: 'Ibn al-Haytham', active: true },
-      { year: '1666', label: 'Newton', active: false },
-      { year: '1774', label: 'Lavoisier', active: false },
-      { year: '1831', label: 'Faraday', active: false },
-      { year: '????', label: 'Future', active: false },
+      { yearKey: 'timeline.1015', labelKey: 'scientist.ibn', active: true },
+      { yearKey: 'timeline.1666', labelKey: 'scientist.newton', active: false },
+      { yearKey: 'timeline.1774', labelKey: 'scientist.lavoisier', active: false },
+      { yearKey: 'timeline.1831', labelKey: 'scientist.faraday', active: false },
+      { yearKey: 'timeline.future', labelKey: 'scientist.future', active: false },
     ]
 
     for (let i = 0; i < eras.length; i++) {
@@ -74,14 +75,14 @@ export class LevelCompleteScene extends Phaser.Scene {
         timelineG.fillCircle(x, timelineY, 4)
       }
 
-      const label = this.add.text(x, timelineY + 15, era.year, {
+      const label = this.add.text(x, timelineY + 15, t(era.yearKey), {
         fontSize: '9px',
         color: era.active ? '#ffd700' : '#4a3728',
         fontFamily: 'Georgia, serif',
       })
       label.setOrigin(0.5, 0)
 
-      const subLabel = this.add.text(x, timelineY + 28, era.label, {
+      const subLabel = this.add.text(x, timelineY + 28, t(era.labelKey), {
         fontSize: '8px',
         color: era.active ? '#e0d5c1' : '#333333',
         fontFamily: 'Georgia, serif',
@@ -176,7 +177,7 @@ export class LevelCompleteScene extends Phaser.Scene {
     const progressSystem = new ProgressSystem()
     const levelProgress = progressSystem.getProgress('level1')
 
-    const xpText = this.add.text(w / 2, h * 0.15, `XP Score: ${levelProgress.xpScore}`, {
+    const xpText = this.add.text(w / 2, h * 0.15, `${t('complete.xp')} ${levelProgress.xpScore}`, {
       fontSize: '16px',
       color: '#69db7c',
       fontFamily: 'Georgia, serif',
@@ -186,7 +187,7 @@ export class LevelCompleteScene extends Phaser.Scene {
     xpText.setAlpha(0)
     this.tweens.add({ targets: xpText, alpha: 1, duration: 800, delay: 3000 })
 
-    const restoredText = this.add.text(w / 2, h * 0.22, 'Science Fragment Recovered!', {
+    const restoredText = this.add.text(w / 2, h * 0.22, t('complete.fragment'), {
       fontSize: '20px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',
@@ -251,7 +252,7 @@ export class LevelCompleteScene extends Phaser.Scene {
   }
 
   private createContinueButton(w: number, h: number): void {
-    const btn = this.add.text(w / 2, h - 60, '[ CONTINUE ]', {
+    const btn = this.add.text(w / 2, h - 60, t('complete.continue'), {
       fontSize: '16px',
       color: '#ffd700',
       fontFamily: 'Georgia, serif',
