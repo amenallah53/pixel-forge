@@ -94,6 +94,24 @@ export const DIALOGUES: Record<string, DialogueSequence> = {
     ],
     onComplete: 'QuizScene',
   },
+  level3_intro: {
+    id: 'level3_intro',
+    lines: [
+      {
+        speaker: 'Narrator',
+        text: 'A precious perfume ingredient has accidentally been mixed with water.',
+      },
+      {
+        speaker: 'Antoine Lavoisier',
+        text: 'Heat the mixture carefully. We will use distillation to recover the perfume.',
+      },
+      {
+        speaker: 'Antoine Lavoisier',
+        text: 'Watch the vapor travel through the tube, cool down, and return as liquid.',
+      },
+    ],
+    onComplete: 'DistillationScene',
+  },
   level4_intro: {
     id: 'level4_intro',
     lines: [

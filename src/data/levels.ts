@@ -1,4 +1,5 @@
 import type { LevelConfig } from "./types.ts";
+import { DISTILLATION_FRAGMENT } from "../levels/level3/types.ts";
 import { FARADAY_FRAGMENT } from "../levels/level4/types.ts";
 
 export const LEVELS: Record<string, LevelConfig> = {
@@ -23,6 +24,18 @@ export const LEVELS: Record<string, LevelConfig> = {
       "LevelCompleteScene",
     ],
   },
+  level3: {
+    id: "level3",
+    title: "Antoine Lavoisier - The Lost Perfume Formula",
+    scientist: "Antoine Lavoisier",
+    era: "1774 Paris",
+    portraitKey: "lavoisier",
+    fragment: DISTILLATION_FRAGMENT,
+    scenes: [
+      "Level3IntroScene",
+      "DistillationScene",
+    ],
+  },
   level4: {
     id: "level4",
     title: "Michael Faraday - The Invisible Energy",
@@ -39,4 +52,4 @@ export const LEVELS: Record<string, LevelConfig> = {
   },
 };
 
-export const LEVEL_ORDER = ["level1", "level4"];
+export const LEVEL_ORDER = ["level1", "level3", "level4"];

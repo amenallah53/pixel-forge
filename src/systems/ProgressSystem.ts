@@ -28,14 +28,13 @@ export class ProgressSystem {
     }
 
     for (const id of LEVEL_ORDER) {
-      if (!this.progress[id]) {
-        this.progress[id] = {
-          levelId: id,
-          completed: false,
-          fragments: [],
-          quizScore: 0,
-          xpScore: 0,
-        }
+      const existing = this.progress[id]
+      this.progress[id] = {
+        levelId: id,
+        completed: existing?.completed ?? false,
+        fragments: Array.isArray(existing?.fragments) ? existing.fragments : [],
+        quizScore: Number(existing?.quizScore ?? 0),
+        xpScore: Number(existing?.xpScore ?? 0),
       }
     }
   }
@@ -48,7 +47,8 @@ export class ProgressSystem {
   }
 
   getProgress(levelId: string): LevelProgress {
-    return this.progress[levelId] ?? {
+    const existing = this.progress[levelId]
+    return existing ?? {
       levelId,
       completed: false,
       fragments: [],
