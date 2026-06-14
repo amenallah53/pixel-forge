@@ -57,9 +57,7 @@ export class DistillationScene extends Phaser.Scene {
   private bubbles: Bubble[] = []
   private vapors: Vapor[] = []
   private droplets: Droplet[] = []
-  private successOverlay?: Phaser.GameObjects.Container
-  private nextButton?: UIButton
-  private menuButton?: UIButton
+  private continueButton?: UIButton
 
   constructor() {
     super({ key: 'DistillationScene' })
@@ -82,6 +80,7 @@ export class DistillationScene extends Phaser.Scene {
     this.drawApparatus(w, h)
     this.createHud(w, h)
     this.createSlider(w, h)
+    this.createControls(w, h)
     this.createInputHandlers()
     this.updateUi()
   }
@@ -293,6 +292,34 @@ export class DistillationScene extends Phaser.Scene {
       this.draggingHeat = true
       this.setHeatFromPointer(pointer.x, trackX, trackW)
     })
+  }
+
+  private createControls(w: number, h: number): void {
+    new UIButton(this, 98, 166, 120, 30, 'Hint', 0x2a1a0a, 0x4a3728, () =>
+      this.showHint(),
+    )
+    new UIButton(this, 236, 166, 160, 30, 'Restart', 0x2a1a0a, 0x4a3728, () =>
+      this.scene.restart(),
+    )
+
+    const continueButton = new UIButton(
+      this,
+      w - 115,
+      h - 52,
+      185,
+      36,
+      'Take the Quiz',
+      0x123225,
+      0x1f6349,
+      () => {
+        this.cameras.main.fadeOut(500, 0, 0, 0)
+        this.cameras.main.once('camerafadeoutcomplete', () => {
+          this.scene.start('Level3QuizScene')
+        })
+      },
+    )
+    continueButton.enabled = false
+    this.continueButton = continueButton
   }
 
   private createInputHandlers(): void {
@@ -508,97 +535,13 @@ export class DistillationScene extends Phaser.Scene {
     this.completed = true
     this.draggingHeat = false
     this.sliderHit.disableInteractive()
-
-    const score = Math.round((this.collectionLevel + this.purity * 100) / 2)
-    this.progressSystem.addXP('level3', 50)
-    this.progressSystem.addFragment('level3', DISTILLATION.fragment)
-    this.progressSystem.completeLevel('level3', score)
-
-    this.showSuccessOverlay(score)
-  }
-
-  private showSuccessOverlay(score: number): void {
-    const w = this.scale.width
-    const h = this.scale.height
-    const nextUnlocked = this.progressSystem.isLevelUnlocked('level4')
-
-    this.successOverlay = this.add.container(0, 0)
-    this.successOverlay.setDepth(50)
-
-    const veil = this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.72)
-    const panel = this.add.graphics()
-    panel.fillStyle(0x0b1118, 0.96)
-    panel.fillRoundedRect(w / 2 - 260, h / 2 - 145, 520, 290, 18)
-    panel.lineStyle(2, 0xf2c86f, 0.55)
-    panel.strokeRoundedRect(w / 2 - 260, h / 2 - 145, 520, 290, 18)
-
-    const title = this.add.text(w / 2, h / 2 - 110, 'Perfume Recovered!', {
-      fontSize: '24px',
-      color: '#f2c86f',
-      fontFamily: 'Georgia, serif',
-      fontStyle: 'italic',
-    }).setOrigin(0.5)
-
-    const scoreText = this.add.text(w / 2, h / 2 - 82, `Final purity score: ${score}%`, {
-      fontSize: '13px',
-      color: '#9fcfe0',
-      fontFamily: 'Georgia, serif',
-    }).setOrigin(0.5)
-
-    const explanation = this.add.text(
-      w / 2,
-      h / 2 - 38,
-      'Distillation separates liquids using differences in boiling temperatures.\nHeating produces vapor.\nCooling turns vapor back into liquid.\nThis allows valuable substances to be separated and collected.',
-      {
-        fontSize: '13px',
-        color: '#e8d9be',
-        fontFamily: 'Georgia, serif',
-        align: 'center',
-        wordWrap: { width: 460 },
-        lineSpacing: 7,
-      },
-    ).setOrigin(0.5)
-
-    const note = this.add.text(w / 2, h / 2 + 70, 'Heat -> Vapor -> Cooling -> Liquid', {
-      fontSize: '12px',
-      color: '#9fcfe0',
-      fontFamily: 'Georgia, serif',
-    }).setOrigin(0.5)
-
-    this.menuButton = new UIButton(
-      this,
-      w / 2 - 118,
-      h / 2 + 108,
-      190,
-      34,
-      'Return to Timeline',
-      0x2a1a0a,
-      0x4a3728,
-      () => {
-        this.cameras.main.fadeOut(500, 0, 0, 0)
-        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('ScientiaMenuScene'))
-      },
-    )
-
-    this.nextButton = new UIButton(
-      this,
-      w / 2 + 118,
-      h / 2 + 108,
-      190,
-      34,
-      nextUnlocked ? 'Continue to Level 4' : 'Return to Timeline',
-      0x123225,
-      0x1f6349,
-      () => {
-        this.cameras.main.fadeOut(500, 0, 0, 0)
-        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Level4IntroScene'))
-      },
-    )
-    this.nextButton.enabled = nextUnlocked
-    this.menuButton.setDepth(60)
-    this.nextButton.setDepth(60)
-
-    this.successOverlay.add([veil, panel, title, scoreText, explanation, note])
+    if (this.continueButton) {
+      this.continueButton.enabled = true
+    }
+    this.statusText.setText('Perfume recovered. Take the quiz to confirm the formula.')
+    this.warningText.setText('The apparatus is stable. The next step is knowledge validation.')
+    this.warningText.setColor('#f2c86f')
+    this.instructionText.setText('Distillation complete. Press Take the Quiz when you are ready.')
   }
 
   private mixColor(start: number, end: number, amount: number): number {

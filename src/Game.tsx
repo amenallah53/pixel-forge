@@ -10,6 +10,8 @@ import { QuizScene } from "./levels/level1/QuizScene.ts";
 import { LevelCompleteScene } from "./levels/level1/LevelCompleteScene.ts";
 import { Level3IntroScene } from "./levels/level3/Level3IntroScene.ts";
 import { DistillationScene } from "./levels/level3/DistillationScene.ts";
+import { Level3QuizScene } from "./levels/level3/Level3QuizScene.ts";
+import { Level3CompleteScene } from "./levels/level3/Level3CompleteScene.ts";
 import { Level4IntroScene } from "./levels/level4/Level4IntroScene.ts";
 import { FaradayExperimentScene } from "./levels/level4/FaradayExperimentScene.ts";
 import { Level4QuizScene } from "./levels/level4/Level4QuizScene.ts";
@@ -26,6 +28,8 @@ const SCENES = [
   LevelCompleteScene,
   Level3IntroScene,
   DistillationScene,
+  Level3QuizScene,
+  Level3CompleteScene,
   Level4IntroScene,
   FaradayExperimentScene,
   Level4QuizScene,

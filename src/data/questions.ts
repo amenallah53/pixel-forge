@@ -83,3 +83,45 @@ export const LEVEL4_QUESTIONS: QuizQuestion[] = [
       'When the magnet enters, the magnetic field through the coil increases. When it leaves, the field decreases. These opposite changes induce current in opposite directions.',
   },
 ]
+
+export const LEVEL3_QUESTIONS: QuizQuestion[] = [
+  {
+    id: 'distillation_boiling',
+    question: 'Why can distillation separate perfume from water?',
+    options: [
+      { label: 'A', text: 'Because the liquids have different boiling temperatures.' },
+      { label: 'B', text: 'Because the bottle is shaped differently.' },
+      { label: 'C', text: 'Because the liquids are frozen.' },
+      { label: 'D', text: 'Because the heat destroys the water only.' },
+    ],
+    correctIndex: 0,
+    explanation:
+      'Distillation works because different liquids evaporate at different temperatures. The more volatile part turns into vapor first, allowing it to be separated.',
+  },
+  {
+    id: 'distillation_vapor',
+    question: 'What happens after the mixture is heated in the flask?',
+    options: [
+      { label: 'A', text: 'The perfume immediately becomes solid.' },
+      { label: 'B', text: 'Part of the mixture evaporates into vapor and moves through the tube.' },
+      { label: 'C', text: 'The water disappears forever.' },
+      { label: 'D', text: 'Nothing happens until the container is shaken.' },
+    ],
+    correctIndex: 1,
+    explanation:
+      'Heating causes the volatile component to evaporate. The vapor travels through the tube toward the cooler section of the apparatus.',
+  },
+  {
+    id: 'distillation_condense',
+    question: 'Why does the vapor turn back into liquid in the receiving container?',
+    options: [
+      { label: 'A', text: 'The vapor is cooled and condenses back into liquid.' },
+      { label: 'B', text: 'The perfume becomes heavier than air.' },
+      { label: 'C', text: 'The tube crushes the vapor into droplets.' },
+      { label: 'D', text: 'The water boils away again.' },
+    ],
+    correctIndex: 0,
+    explanation:
+      'When vapor cools, it condenses back into liquid. That liquid can then be collected separately as the recovered perfume.',
+  },
+]

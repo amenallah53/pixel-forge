@@ -34,6 +34,8 @@ export const LEVELS: Record<string, LevelConfig> = {
     scenes: [
       "Level3IntroScene",
       "DistillationScene",
+      "Level3QuizScene",
+      "Level3CompleteScene",
     ],
   },
   level4: {
