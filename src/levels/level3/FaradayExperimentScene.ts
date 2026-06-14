@@ -88,7 +88,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
 
   create(): void {
     const progressSystem = new ProgressSystem();
-    if (!progressSystem.isLevelUnlocked("level4")) {
+    if (!progressSystem.isLevelUnlocked("level3")) {
       this.scene.start("ScientiaMenuScene");
       return;
     }
@@ -475,7 +475,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
       () => {
         this.cameras.main.fadeOut(500, 0, 0, 0);
         this.cameras.main.once("camerafadeoutcomplete", () =>
-          this.scene.start("Level4QuizScene"),
+          this.scene.start("Level3QuizScene"),
         );
       },
     );
@@ -811,7 +811,7 @@ export class FaradayExperimentScene extends Phaser.Scene {
   private playDiscovery(): void {
     this.discoveryPlayed = true;
     this.stage = "restored";
-    new ProgressSystem().addXP('level4', 50);
+    new ProgressSystem().addXP('level3', 50);
     this.continueButton!.enabled = true;
     this.subPhase = "interact";
     this.obsPanel.setVisible(false);

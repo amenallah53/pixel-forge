@@ -19,76 +19,73 @@ export class Level3IntroScene extends Phaser.Scene {
 
     const w = this.scale.width
     const h = this.scale.height
+    this.cameras.main.setBackgroundColor('#05080d')
+    this.cameras.main.fadeIn(800, 0, 0, 0)
 
-    this.cameras.main.setBackgroundColor('#120d0b')
-    this.cameras.main.fadeIn(900, 0, 0, 0)
-
-    this.createBackground(w, h)
-    this.createStillSilhouette(w, h)
+    this.createDarkCity(w, h)
+    this.createLaboratoryWindow(w, h)
     this.createTitle(w)
 
     this.time.delayedCall(900, () => this.startDialogue())
   }
 
-  private createBackground(w: number, h: number): void {
+  private createDarkCity(w: number, h: number): void {
     const g = this.add.graphics()
-    g.fillGradientStyle(0x120d0b, 0x1a140f, 0x2a1a0d, 0x120d0b, 1)
+    g.fillGradientStyle(0x05080d, 0x07111a, 0x151018, 0x08070d, 1)
     g.fillRect(0, 0, w, h)
 
-    for (let i = 0; i < 56; i++) {
-      g.fillStyle(0xf2c86f, 0.02 + Math.random() * 0.03)
-      g.fillCircle(Math.random() * w, Math.random() * h, 0.5 + Math.random() * 1.3)
+    for (let i = 0; i < 11; i++) {
+      const bw = 42 + (i % 3) * 18
+      const bh = 120 + (i % 4) * 32
+      const x = i * 78 - 10
+      const y = h - 90 - bh
+      g.fillStyle(0x101722, 0.92)
+      g.fillRect(x, y, bw, bh)
+      g.lineStyle(1, 0x263346, 0.25)
+      g.strokeRect(x, y, bw, bh)
+      for (let wy = y + 14; wy < y + bh - 12; wy += 22) {
+        for (let wx = x + 9; wx < x + bw - 8; wx += 16) {
+          g.fillStyle(0x1c2630, 0.45)
+          g.fillRect(wx, wy, 5, 8)
+        }
+      }
     }
+
+    g.fillStyle(0x130e0b, 1)
+    g.fillRect(0, h - 92, w, 92)
+    g.lineStyle(2, 0x2a1d13, 0.65)
+    g.beginPath()
+    g.moveTo(0, h - 92)
+    g.lineTo(w, h - 92)
+    g.strokePath()
   }
 
-  private createStillSilhouette(w: number, h: number): void {
+  private createLaboratoryWindow(w: number, h: number): void {
     const g = this.add.graphics()
-    g.setAlpha(0.95)
-
-    g.fillStyle(0x090b10, 0.72)
-    g.fillRect(0, h - 140, w, 140)
-
-    g.lineStyle(3, 0x8d6b3c, 0.72)
-    g.beginPath()
-    g.moveTo(w * 0.34, h * 0.54)
-    g.lineTo(w * 0.34, h * 0.34)
-    g.lineTo(w * 0.5, h * 0.34)
-    g.lineTo(w * 0.64, h * 0.46)
-    g.strokePath()
-
-    g.fillStyle(0x0d1116, 0.72)
-    g.fillCircle(w * 0.28, h * 0.58, 60)
-    g.fillStyle(0x0d1116, 0.72)
-    g.fillRect(w * 0.265, h * 0.32, 30, 90)
-    g.lineStyle(2, 0xe6d2a0, 0.3)
-    g.strokeCircle(w * 0.28, h * 0.58, 60)
-    g.strokeRoundedRect(w * 0.265, h * 0.32, 30, 90, 8)
-
-    g.fillStyle(0x0d1116, 0.72)
-    g.fillRoundedRect(w * 0.63, h * 0.42, 120, 130, 12)
-    g.lineStyle(2, 0xe6d2a0, 0.3)
-    g.strokeRoundedRect(w * 0.63, h * 0.42, 120, 130, 12)
-    g.lineStyle(2, 0x8ecfff, 0.22)
-    g.lineBetween(w * 0.34, h * 0.44, w * 0.63, h * 0.44)
-    g.lineBetween(w * 0.34, h * 0.48, w * 0.63, h * 0.48)
-
-    this.add.text(w / 2, h * 0.18, 'Lavoisier and the Lost Perfume Formula', {
-      fontSize: '24px',
-      color: '#f2c86f',
-      fontFamily: 'Georgia, serif',
-      fontStyle: 'italic',
-    }).setOrigin(0.5)
-
-    this.add.text(w / 2, h * 0.24, 'A simple distillation experiment will recover the perfume.', {
-      fontSize: '12px',
-      color: '#e8d9be',
-      fontFamily: 'Georgia, serif',
-    }).setOrigin(0.5)
+    const x = w * 0.72
+    const y = h * 0.25
+    g.fillStyle(0x06090e, 0.9)
+    g.fillRoundedRect(x - 95, y - 70, 190, 140, 8)
+    g.lineStyle(3, 0x6c4b2a, 0.7)
+    g.strokeRoundedRect(x - 95, y - 70, 190, 140, 8)
+    g.lineStyle(1, 0x6c4b2a, 0.5)
+    g.lineBetween(x, y - 70, x, y + 70)
+    g.lineBetween(x - 95, y, x + 95, y)
+    g.fillStyle(0x55d6ff, 0.07)
+    g.fillCircle(x - 25, y + 18, 38)
   }
 
   private createTitle(w: number): void {
-    this.add.text(w / 2, 38, 'LEVEL 3', {
-      fontSize: '13px',
+    const title = this.add.text(w / 2, 46, 'Michael Faraday - The Invisible Energy', {
+      fontSize: '24px',
+      color: '#f4d38a',
+      fontFamily: 'Georgia, serif',
+      fontStyle: 'italic',
+    })
+    title.setOrigin(0.5)
+
+    this.add.text(w / 2, 78, '1831: electricity has vanished from the industrial city', {
+      fontSize: '12px',
       color: '#9fcfe0',
       fontFamily: 'Georgia, serif',
     }).setOrigin(0.5)
@@ -97,11 +94,11 @@ export class Level3IntroScene extends Phaser.Scene {
   private async startDialogue(): Promise<void> {
     this.dialogueSystem = new DialogueSystem(this)
     await this.dialogueSystem.playSequence(DIALOGUES.level3_intro.lines)
-
-    this.cameras.main.fadeOut(700, 0, 0, 0)
+    this.cameras.main.fadeOut(600, 0, 0, 0)
     this.cameras.main.once('camerafadeoutcomplete', () => {
       this.dialogueSystem.destroy()
-      this.scene.start('DistillationScene')
+      this.scene.start('FaradayExperimentScene')
     })
   }
 }
+

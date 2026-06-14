@@ -29,7 +29,7 @@ type Droplet = {
   radius: number
 }
 
-const DISTILLATION = LEVELS.level3
+const DISTILLATION = LEVELS.level2
 
 export class DistillationScene extends Phaser.Scene {
   private progressSystem!: ProgressSystem
@@ -65,7 +65,7 @@ export class DistillationScene extends Phaser.Scene {
 
   create(): void {
     this.progressSystem = new ProgressSystem()
-    if (!this.progressSystem.isLevelUnlocked('level3')) {
+    if (!this.progressSystem.isLevelUnlocked('level2')) {
       this.scene.start('ScientiaMenuScene')
       return
     }
@@ -314,7 +314,7 @@ export class DistillationScene extends Phaser.Scene {
       () => {
         this.cameras.main.fadeOut(500, 0, 0, 0)
         this.cameras.main.once('camerafadeoutcomplete', () => {
-          this.scene.start('Level3QuizScene')
+          this.scene.start('Level2QuizScene')
         })
       },
     )

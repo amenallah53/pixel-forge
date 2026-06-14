@@ -8,14 +8,14 @@ import { ObservationScene } from "./levels/level1/ObservationScene.ts";
 import { MirrorLabyrinthScene } from "./levels/level1/MirrorLabyrinthScene.ts";
 import { QuizScene } from "./levels/level1/QuizScene.ts";
 import { LevelCompleteScene } from "./levels/level1/LevelCompleteScene.ts";
+import { Level2IntroScene } from "./levels/level2/Level2IntroScene.ts";
+import { DistillationScene } from "./levels/level2/DistillationScene.ts";
+import { Level2QuizScene } from "./levels/level2/Level2QuizScene.ts";
+import { Level2CompleteScene } from "./levels/level2/Level2CompleteScene.ts";
 import { Level3IntroScene } from "./levels/level3/Level3IntroScene.ts";
-import { DistillationScene } from "./levels/level3/DistillationScene.ts";
+import { FaradayExperimentScene } from "./levels/level3/FaradayExperimentScene.ts";
 import { Level3QuizScene } from "./levels/level3/Level3QuizScene.ts";
 import { Level3CompleteScene } from "./levels/level3/Level3CompleteScene.ts";
-import { Level4IntroScene } from "./levels/level4/Level4IntroScene.ts";
-import { FaradayExperimentScene } from "./levels/level4/FaradayExperimentScene.ts";
-import { Level4QuizScene } from "./levels/level4/Level4QuizScene.ts";
-import { Level4CompleteScene } from "./levels/level4/Level4CompleteScene.ts";
 
 const SCENES = [
   ScientiaBootScene,
@@ -26,14 +26,14 @@ const SCENES = [
   MirrorLabyrinthScene,
   QuizScene,
   LevelCompleteScene,
-  Level3IntroScene,
+  Level2IntroScene,
   DistillationScene,
+  Level2QuizScene,
+  Level2CompleteScene,
+  Level3IntroScene,
+  FaradayExperimentScene,
   Level3QuizScene,
   Level3CompleteScene,
-  Level4IntroScene,
-  FaradayExperimentScene,
-  Level4QuizScene,
-  Level4CompleteScene,
 ];
 
 export function Game() {

@@ -27,19 +27,6 @@ export const LEVEL1_QUESTIONS: QuizQuestion[] = [
     explanation:
       'A smaller aperture limits light rays to those travelling almost straight, reducing blur and making the image sharper, but dimmer because less light enters.',
   },
-  {
-    id: 'q3',
-    question: 'What did Ibn al-Haytham prove about vision by using the camera obscura?',
-    options: [
-      { label: 'A', text: 'The eye emits rays to see objects.' },
-      { label: 'B', text: 'Light travels from objects into the eye.' },
-      { label: 'C', text: 'Images are created by magic.' },
-      { label: 'D', text: 'The brain generates light.' },
-    ],
-    correctIndex: 1,
-    explanation:
-      'Ibn al-Haytham demonstrated that light reflects off objects and travels in straight lines into the eye, proving vision is a result of light entering the eye, not rays leaving it.',
-  },
 ]
 
 export const LEVEL4_QUESTIONS: QuizQuestion[] = [
@@ -110,18 +97,5 @@ export const LEVEL3_QUESTIONS: QuizQuestion[] = [
     correctIndex: 1,
     explanation:
       'Heating causes the volatile component to evaporate. The vapor travels through the tube toward the cooler section of the apparatus.',
-  },
-  {
-    id: 'distillation_condense',
-    question: 'Why does the vapor turn back into liquid in the receiving container?',
-    options: [
-      { label: 'A', text: 'The vapor is cooled and condenses back into liquid.' },
-      { label: 'B', text: 'The perfume becomes heavier than air.' },
-      { label: 'C', text: 'The tube crushes the vapor into droplets.' },
-      { label: 'D', text: 'The water boils away again.' },
-    ],
-    correctIndex: 0,
-    explanation:
-      'When vapor cools, it condenses back into liquid. That liquid can then be collected separately as the recovered perfume.',
   },
 ]

@@ -94,8 +94,8 @@ export const DIALOGUES: Record<string, DialogueSequence> = {
     ],
     onComplete: 'QuizScene',
   },
-  level3_intro: {
-    id: 'level3_intro',
+  level2_intro: {
+    id: 'level2_intro',
     lines: [
       {
         speaker: 'Narrator',
@@ -112,8 +112,8 @@ export const DIALOGUES: Record<string, DialogueSequence> = {
     ],
     onComplete: 'DistillationScene',
   },
-  level4_intro: {
-    id: 'level4_intro',
+  level3_intro: {
+    id: 'level3_intro',
     lines: [
       {
         speaker: 'Narrator',

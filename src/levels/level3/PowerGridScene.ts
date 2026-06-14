@@ -892,7 +892,7 @@ export class PowerGridScene extends Phaser.Scene {
     this.time.delayedCall(1900, () => {
       this.cameras.main.fadeOut(700, 0, 0, 0);
       this.cameras.main.once("camerafadeoutcomplete", () =>
-        this.scene.start("Level4QuizScene"),
+        this.scene.start("Level3QuizScene"),
       );
     });
   }
@@ -925,7 +925,7 @@ export class PowerGridScene extends Phaser.Scene {
     this.completionStarted = true;
     this.cameras.main.fadeOut(450, 0, 0, 0);
     this.cameras.main.once("camerafadeoutcomplete", () =>
-      this.scene.start("Level4QuizScene"),
+      this.scene.start("Level3QuizScene"),
     );
   }
 
